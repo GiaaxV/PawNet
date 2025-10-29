@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PetVerse Panamá 🐾🇵🇦</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1>
+                    <span class="logo-full">🐾 PetVerse Panamá 🇵🇦</span>
+                    <span class="logo-short">🐾 PetVerse</span>
+                </h1>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link">Inicio</a>
+                <a href="#dashboard" class="nav-link active">Dashboard</a>
+            </nav>
+            <div class="auth-buttons">
+                <div class="user-menu">
+                    <img src="https://via.placeholder.com/40" alt="Usuario" class="user-avatar" id="userAvatar">
+                    <span class="user-name" id="userName">Usuario</span>
+                    <button class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="dashboard-content">
+        <div class="container">
+            <div class="dashboard-layout">
+                <!-- Sidebar -->
+                <aside class="dashboard-sidebar">
+                    <div class="sidebar-menu">
+                        <h3>Configuración</h3>
+                        <ul class="menu-list">
+                            <li class="menu-item active" data-section="profile">
+                                <i class="fas fa-user"></i>
+                                <span>Mi Perfil</span>
+                            </li>
+                            <li class="menu-item" data-section="pet">
+                                <i class="fas fa-paw"></i>
+                                <span>Perfil de Mascota</span>
+                            </li>
+                            <li class="menu-item" data-section="appearance">
+                                <i class="fas fa-palette"></i>
+                                <span>Apariencia</span>
+                            </li>
+                            <li class="menu-item" data-section="privacy">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Privacidad</span>
+                            </li>
+                            <li class="menu-item" data-section="notifications">
+                                <i class="fas fa-bell"></i>
+                                <span>Notificaciones</span>
+                            </li>
+                            <li class="menu-item" data-section="account">
+                                <i class="fas fa-cog"></i>
+                                <span>Cuenta</span>
+                            </li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Main Dashboard -->
+                <main class="dashboard-main">
+                    <!-- Profile Section -->
+                    <section id="profile" class="dashboard-section active">
+                        <div class="section-header">
+                            <h2>Mi Perfil</h2>
+                            <p>Información personal del dueño</p>
+                        </div>
+                        <div class="settings-card">
+                            <form class="settings-form" id="profileForm">
+                                <div class="form-group">
+                                    <label>Foto de Perfil</label>
+                                    <div class="avatar-upload">
+                                        <img src="https://via.placeholder.com/100" alt="Avatar" class="avatar-preview" id="avatarPreview">
+                                        <button type="button" class="btn-secondary" onclick="uploadAvatar()">
+                                            <i class="fas fa-camera"></i> Cambiar Foto
+                                        </button>
+                                        <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">Nombre</label>
+                                        <input type="text" id="firstName" placeholder="Tu nombre">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Apellido</label>
+                                        <input type="text" id="lastName" placeholder="Tu apellido">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" placeholder="tu@email.com" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="phone">Teléfono</label>
+                                    <input type="tel" id="phone" placeholder="+507 6123-4567">
+                                </div>
+                                <div class="form-group">
+                                    <label for="location">Ubicación</label>
+                                    <select id="location">
+                                        <option value="">Selecciona tu provincia</option>
+                                        <option value="panama">Ciudad de Panamá</option>
+                                        <option value="san-miguelito">San Miguelito</option>
+                                        <option value="chorrera">La Chorrera</option>
+                                        <option value="colon">Colón</option>
+                                        <option value="david">David</option>
+                                        <option value="santiago">Santiago</option>
+                                        <option value="chitre">Chitré</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="bio">Biografía</label>
+                                    <textarea id="bio" rows="3" placeholder="Cuéntanos sobre ti y tu amor por las mascotas..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary">Guardar Cambios</button>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- Pet Profile Section -->
+                    <section id="pet" class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Perfil de Mascota</h2>
+                            <p>Información de tu compañero peludo</p>
+                        </div>
+                        <div class="settings-card">
+                            <form class="settings-form" id="petForm">
+                                <div class="form-group">
+                                    <label>Foto de Mascota</label>
+                                    <div class="avatar-upload">
+                                        <img src="https://via.placeholder.com/100" alt="Mascota" class="avatar-preview" id="petAvatarPreview">
+                                        <button type="button" class="btn-secondary" onclick="uploadPetAvatar()">
+                                            <i class="fas fa-camera"></i> Cambiar Foto
+                                        </button>
+                                        <input type="file" id="petAvatarInput" accept="image/*" style="display: none;">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="petName">Nombre de Mascota</label>
+                                        <input type="text" id="petName" placeholder="Nombre de tu mascota">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="petType">Tipo</label>
+                                        <select id="petType">
+                                            <option value="">Selecciona tipo</option>
+                                            <option value="dog">Perro</option>
+                                            <option value="cat">Gato</option>
+                                            <option value="rabbit">Conejo</option>
+                                            <option value="bird">Ave</option>
+                                            <option value="other">Otro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="petBreed">Raza</label>
+                                        <input type="text" id="petBreed" placeholder="Raza de tu mascota">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="petAge">Edad</label>
+                                        <input type="number" id="petAge" placeholder="Edad en años">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="petGender">Género</label>
+                                        <select id="petGender">
+                                            <option value="">Selecciona género</option>
+                                            <option value="male">Macho</option>
+                                            <option value="female">Hembra</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="petWeight">Peso (kg)</label>
+                                        <input type="number" id="petWeight" placeholder="Peso en kg" step="0.1">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="petPersonality">Personalidad</label>
+                                    <textarea id="petPersonality" rows="3" placeholder="Describe la personalidad de tu mascota..."></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary">Guardar Perfil de Mascota</button>
+                            </form>
+                        </div>
+                    </section>
+
+                    <!-- Appearance Section -->
+                    <section id="appearance" class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Apariencia</h2>
+                            <p>Personaliza la apariencia de PetVerse</p>
+                        </div>
+                        <div class="settings-card">
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Tema de Color</label>
+                                    <div class="color-themes">
+                                        <div class="theme-option active" data-theme="default">
+                                            <div class="theme-preview">
+                                                <div class="color-dot" style="background: #ff6b6b;"></div>
+                                                <div class="color-dot" style="background: #4ecdc4;"></div>
+                                                <div class="color-dot" style="background: #ffa726;"></div>
+                                            </div>
+                                            <span>Predeterminado</span>
+                                        </div>
+                                        <div class="theme-option" data-theme="ocean">
+                                            <div class="theme-preview">
+                                                <div class="color-dot" style="background: #3498db;"></div>
+                                                <div class="color-dot" style="background: #2ecc71;"></div>
+                                                <div class="color-dot" style="background: #1abc9c;"></div>
+                                            </div>
+                                            <span>Océano</span>
+                                        </div>
+                                        <div class="theme-option" data-theme="sunset">
+                                            <div class="theme-preview">
+                                                <div class="color-dot" style="background: #e74c3c;"></div>
+                                                <div class="color-dot" style="background: #f39c12;"></div>
+                                                <div class="color-dot" style="background: #e67e22;"></div>
+                                            </div>
+                                            <span>Atardecer</span>
+                                        </div>
+                                        <div class="theme-option" data-theme="forest">
+                                            <div class="theme-preview">
+                                                <div class="color-dot" style="background: #27ae60;"></div>
+                                                <div class="color-dot" style="background: #2ecc71;"></div>
+                                                <div class="color-dot" style="background: #16a085;"></div>
+                                            </div>
+                                            <span>Bosque</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Modo Oscuro</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="darkMode">
+                                        <label for="darkMode" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Activar modo oscuro</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-primary" onclick="saveAppearanceSettings()">Aplicar Cambios</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Privacy Section -->
+                    <section id="privacy" class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Privacidad</h2>
+                            <p>Controla quién puede ver tu contenido</p>
+                        </div>
+                        <div class="settings-card">
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Perfil Público</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="publicProfile" checked>
+                                        <label for="publicProfile" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Permitir que otros vean tu perfil</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mostrar en Búsquedas</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="showInSearch" checked>
+                                        <label for="showInSearch" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Aparecer en resultados de búsqueda</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Permitir Mensajes</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="allowMessages" checked>
+                                        <label for="allowMessages" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Recibir mensajes de otros usuarios</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-primary" onclick="savePrivacySettings()">Guardar Configuración</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Notifications Section -->
+                    <section id="notifications" class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Notificaciones</h2>
+                            <p>Configura qué notificaciones quieres recibir</p>
+                        </div>
+                        <div class="settings-card">
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label>Likes en Posts</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="notifyLikes" checked>
+                                        <label for="notifyLikes" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Notificar cuando alguien le dé like a tus posts</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Comentarios</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="notifyComments" checked>
+                                        <label for="notifyComments" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Notificar cuando comenten tus posts</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nuevos Matches</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="notifyMatches" checked>
+                                        <label for="notifyMatches" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Notificar cuando tengas un nuevo match</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Mensajes</label>
+                                    <div class="toggle-switch">
+                                        <input type="checkbox" id="notifyMessages" checked>
+                                        <label for="notifyMessages" class="toggle-label">
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                        <span class="toggle-text">Notificar cuando recibas mensajes</span>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn-primary" onclick="saveNotificationSettings()">Guardar Notificaciones</button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Account Section -->
+                    <section id="account" class="dashboard-section">
+                        <div class="section-header">
+                            <h2>Configuración de Cuenta</h2>
+                            <p>Gestiona tu cuenta y seguridad</p>
+                        </div>
+                        <div class="settings-card">
+                            <div class="settings-form">
+                                <div class="form-group">
+                                    <label for="currentPassword">Contraseña Actual</label>
+                                    <input type="password" id="currentPassword" placeholder="Contraseña actual">
+                                </div>
+                                <div class="form-group">
+                                    <label for="newPassword">Nueva Contraseña</label>
+                                    <input type="password" id="newPassword" placeholder="Nueva contraseña">
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirmar Contraseña</label>
+                                    <input type="password" id="confirmPassword" placeholder="Confirmar nueva contraseña">
+                                </div>
+                                <button type="button" class="btn-primary" onclick="changePassword()">Cambiar Contraseña</button>
+                                
+                                <hr class="divider">
+                                
+                                <div class="danger-zone">
+                                    <h3>Zona Peligrosa</h3>
+                                    <p>Estas acciones son permanentes y no se pueden deshacer.</p>
+                                    <button type="button" class="btn-danger" onclick="deleteAccount()">Eliminar Cuenta</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </main>
+
+    <script src="script.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>
