@@ -18,20 +18,63 @@
                     <span class="logo-short">PawNet</span>
                 </h1>
             </div>
-            <nav class="nav">
-                <a href="#home" class="nav-link active">Inicio</a>
-                <a href="#stories" class="nav-link">Historias</a>
-                <a href="#reels" class="nav-link">Reels</a>
-                <a href="#matches" class="nav-link">Encuentra Pareja</a>
-                <a href="#adoption" class="nav-link">Adopciones</a>
-                <a href="#profile" class="nav-link">Mi Perfil</a>
-            </nav>
+            <div class="header-spacer"></div>
             <div class="auth-buttons">
                 <button class="btn-secondary" onclick="showLogin()">Iniciar Sesión</button>
                 <button class="btn-primary" onclick="showRegister()">Registrarse</button>
             </div>
         </div>
     </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-header">
+                <h3>Menú</h3>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#home" class="sidebar-link active" onclick="showSection('home')">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                <a href="#stories" class="sidebar-link" onclick="showSection('stories')">
+                    <i class="fas fa-book-open"></i>
+                    <span>Historias</span>
+                </a>
+                <a href="#reels" class="sidebar-link" onclick="showSection('reels')">
+                    <i class="fas fa-play-circle"></i>
+                    <span>Reels</span>
+                </a>
+                <a href="#matches" class="sidebar-link" onclick="showSection('matches')">
+                    <i class="fas fa-heart"></i>
+                    <span>Encuentra Pareja</span>
+                </a>
+                <a href="#adoption" class="sidebar-link" onclick="showSection('adoption')">
+                    <i class="fas fa-home"></i>
+                    <span>Adopciones</span>
+                </a>
+                <a href="#profile" class="sidebar-link" onclick="showSection('profile')">
+                    <i class="fas fa-user"></i>
+                    <span>Mi Perfil</span>
+                </a>
+                <a href="dashboard.html" class="sidebar-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Dashboard</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info" id="sidebarUserInfo" onclick="goToDashboard()">
+                    <img src="https://via.placeholder.com/40" alt="Usuario" class="sidebar-avatar">
+                    <div class="user-details">
+                        <span class="username">Mi Mascota</span>
+                        <span class="user-status">Configuración y perfil</span>
+                    </div>
+                    <i class="fas fa-chevron-right user-arrow"></i>
+                </div>
+            </div>
+        </div>
+    </aside>
 
     <!-- Main Content -->
     <main class="main-content">

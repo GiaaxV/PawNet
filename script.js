@@ -179,50 +179,98 @@ const sampleAdoptions = [
         name: "Charlie",
         breed: "Mestizo",
         age: "6 meses",
-        location: "Ciudad de Panamá - Fundación Amigos de los Animales",
+        gender: "Macho",
+        location: "San Miguelito, Provincia de Panamá",
+        foundation: "Fundación San Francisco de Asís",
         image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=300&h=250&fit=crop",
-        description: "Charlie es un cachorro muy juguetón que busca una familia amorosa en Panamá. Le encanta jugar con pelotas y es muy sociable con otros perros.",
-        contact: "WhatsApp: +507 6123-4567"
+        description: "Charlie es un cachorro muy juguetón que busca una familia amorosa. Le encanta jugar con pelotas y es muy sociable con otros perros.",
+        phone: "383-3080",
+        whatsapp: "+507 6980-5087",
+        instagram: "@ponteenalgo",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: false
     },
     {
         id: 2,
-        name: "Whiskers",
-        breed: "Gato Común",
+        name: "Bella",
+        breed: "Labrador Mix",
         age: "2 años",
-        location: "Chorrera - Refugio Gatitos Felices",
-        image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=300&h=250&fit=crop",
-        description: "Whiskers es un gato muy cariñoso y tranquilo. Perfecto para familias panameñas con niños. Ya está esterilizado y vacunado.",
-        contact: "WhatsApp: +507 6234-5678"
+        gender: "Hembra",
+        location: "Ciudad de Panamá",
+        foundation: "Fundación Spay Panamá",
+        image: "https://images.unsplash.com/photo-1551717743-49959800b1f6?w=300&h=250&fit=crop",
+        description: "Bella es una perra muy cariñosa y tranquila. Perfecta para familias con niños. Ya está esterilizada y vacunada.",
+        whatsapp: "Contactar vía Instagram",
+        instagram: "@fundacionspaypty",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: true
     },
     {
         id: 3,
-        name: "Buddy",
-        breed: "Golden Retriever",
-        age: "5 años",
-        location: "Pedregal - Asociación Patitas Panameñas",
-        image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=250&fit=crop",
-        description: "Buddy es un perro adulto muy bien educado. Ideal para personas en Panamá que buscan un compañero tranquilo y obediente.",
-        contact: "WhatsApp: +507 6345-6789"
+        name: "Max",
+        breed: "Pastor Alemán",
+        age: "4 años",
+        gender: "Macho",
+        location: "Gorgona, Panamá",
+        foundation: "Panama Andy's Animal Rescue",
+        image: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?w=300&h=250&fit=crop",
+        description: "Max es un perro adulto muy bien educado y protector. Ideal para familias que buscan un compañero leal y obediente.",
+        whatsapp: "Contactar vía Instagram",
+        instagram: "@panamandysanimalrescue",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: true
     },
     {
         id: 4,
         name: "Luna",
-        breed: "Husky Siberiano",
-        age: "3 años",
-        location: "Tocumen - Rescate Canino PTY",
-        image: "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?w=300&h=250&fit=crop",
-        description: "Luna es una perra muy activa que necesita una familia con experiencia. Perfecta para actividades al aire libre en el clima panameño.",
-        contact: "WhatsApp: +507 6456-7890"
+        breed: "Gata Común",
+        age: "1 año",
+        gender: "Hembra",
+        location: "Ciudad de Panamá",
+        foundation: "Defensores de Animales Panamá",
+        image: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?w=300&h=250&fit=crop",
+        description: "Luna es una gatita muy activa y juguetona. Perfecta para familias que buscan una compañera cariñosa y divertida.",
+        phone: "6372-9107",
+        whatsapp: "+507 6524-1314",
+        instagram: "@defensoresanimalespty",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: true
     },
     {
         id: 5,
+        name: "Coco",
+        breed: "Golden Retriever",
+        age: "3 años",
+        gender: "Hembra",
+        location: "Boquete, Provincia de Chiriquí",
+        foundation: "Amigos de Animales - Boquete",
+        image: "https://images.unsplash.com/photo-1552053831-71594a27632d?w=300&h=250&fit=crop",
+        description: "Coco es una perra muy inteligente y cariñosa. Ideal para familias activas que disfruten de caminatas y actividades al aire libre.",
+        whatsapp: "+507 6361-5098",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: true
+    },
+    {
+        id: 6,
         name: "Milo",
         breed: "Gato Siamés",
-        age: "1 año",
-        location: "Albrook - Hogar Temporal Felino",
+        age: "8 meses",
+        gender: "Macho",
+        location: "San Miguelito, Provincia de Panamá",
+        foundation: "Fundación San Francisco de Asís",
         image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=300&h=250&fit=crop",
-        description: "Milo es un gato joven muy inteligente y juguetón. Busca una familia en Panamá que le dé mucho amor y atención.",
-        contact: "WhatsApp: +507 6567-8901"
+        description: "Milo es un gatito joven muy inteligente y juguetón. Busca una familia que le dé mucho amor y atención.",
+        phone: "383-3080",
+        whatsapp: "+507 6980-5087",
+        instagram: "@ponteenalgo",
+        status: "Disponible",
+        vaccinated: true,
+        sterilized: false
     }
 ];
 
@@ -303,10 +351,12 @@ function updateAuthUI() {
             <div class="user-menu">
                 <img src="${currentUser.avatar || 'https://via.placeholder.com/40'}" alt="Usuario" class="user-avatar">
                 <span class="user-name">${currentUser.petName || currentUser.firstName || 'Usuario'}</span>
-                <button class="btn-secondary" onclick="goToDashboard()">Dashboard</button>
                 <button class="btn-secondary" onclick="logout()">Cerrar Sesión</button>
             </div>
         `;
+
+        // Update sidebar user info
+        updateSidebarUserInfo(currentUser);
 
         // Update create post area
         const profilePic = document.querySelector('.create-post .profile-pic');
@@ -330,6 +380,23 @@ function updateAuthUI() {
             <button class="btn-secondary" onclick="showLogin()">Iniciar Sesión</button>
             <button class="btn-primary" onclick="showRegister()">Registrarse</button>
         `;
+    }
+}
+
+function updateSidebarUserInfo(user) {
+    const sidebarUserInfo = document.getElementById('sidebarUserInfo');
+    if (sidebarUserInfo && user) {
+        sidebarUserInfo.innerHTML = `
+            <img src="${user.petAvatar || user.avatar || 'https://via.placeholder.com/40'}" alt="Usuario" class="sidebar-avatar">
+            <div class="user-details">
+                <span class="username">${user.petName || user.firstName || 'Mi Mascota'}</span>
+                <span class="user-status">Configuración y perfil</span>
+            </div>
+            <i class="fas fa-chevron-right user-arrow"></i>
+        `;
+        
+        // Make sure the click handler is set
+        sidebarUserInfo.onclick = goToDashboard;
     }
 }
 
@@ -469,6 +536,9 @@ function showSection(sectionId) {
         targetSection.classList.add('active');
         console.log('✅ Sección activada:', sectionId);
 
+        // Update navigation links
+        updateNavigation(sectionId);
+
         // Auto-load profile data when navigating to profile
         if (sectionId === 'profile') {
             loadUserProfile();
@@ -476,6 +546,26 @@ function showSection(sectionId) {
     } else {
         console.error('❌ Sección no encontrada:', sectionId);
     }
+}
+
+function updateNavigation(activeSection) {
+    // Update header navigation
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${activeSection}`) {
+            link.classList.add('active');
+        }
+    });
+
+    // Update sidebar navigation
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    sidebarLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${activeSection}`) {
+            link.classList.add('active');
+        }
+    });
 }
 
 // Feed Functions
@@ -492,11 +582,13 @@ function loadFeed() {
 function createPostElement(post) {
     const postDiv = document.createElement('div');
     postDiv.className = 'post-card';
+    
+    console.log('🖼️ Creando post para:', post.user, 'con imagen:', post.image ? 'SÍ' : 'NO');
 
     // Determine if it's a video post
     const mediaElement = post.isVideo ?
         `<video src="${post.image}" class="post-image" controls></video>` :
-        `<img src="${post.image}" alt="Post image" class="post-image">`;
+        `<img src="${post.image}" alt="Post image" class="post-image" onerror="console.error('Error cargando imagen:', this.src)">`;
 
     postDiv.innerHTML = `
         <div class="post-card-header">
@@ -562,6 +654,7 @@ function createStoryGridElement(story) {
     const storyDiv = document.createElement('div');
     storyDiv.className = 'story-card';
     storyDiv.innerHTML = `
+        <div class="story-time">${story.timeAgo}</div>
         <img src="${story.background}" alt="Story background" class="story-background">
         <div class="story-overlay">
             <div class="story-user-info">
@@ -569,7 +662,7 @@ function createStoryGridElement(story) {
                 <span>${story.user}</span>
             </div>
             <p class="story-text">${story.text}</p>
-            <p style="font-size: 0.8rem; opacity: 0.8;">${story.timeAgo} • ${story.location}</p>
+            <p class="story-location">📍 ${story.location}</p>
         </div>
     `;
     storyDiv.onclick = () => viewStory(story.id);
@@ -579,7 +672,44 @@ function createStoryGridElement(story) {
 function viewStory(storyId) {
     const story = sampleStories.find(s => s.id === storyId);
     if (story) {
-        alert(`Viendo historia de ${story.user}: "${story.text}" desde ${story.location} 📱`);
+        // Create story viewer modal
+        const modal = document.createElement('div');
+        modal.className = 'story-viewer-modal';
+        modal.innerHTML = `
+            <div class="story-viewer">
+                <button class="story-close" onclick="closeStoryViewer()">&times;</button>
+                <div class="story-progress">
+                    <div class="story-progress-bar"></div>
+                </div>
+                <img src="${story.background}" alt="Story" class="story-viewer-image">
+                <div class="story-viewer-info">
+                    <div class="story-viewer-user">
+                        <img src="${story.userAvatar}" alt="${story.user}" class="story-viewer-avatar">
+                        <span>${story.user}</span>
+                        <span class="story-viewer-time">${story.timeAgo}</span>
+                    </div>
+                    <p class="story-viewer-text">${story.text}</p>
+                    <p class="story-viewer-location">📍 ${story.location}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+        
+        // Auto close after 5 seconds
+        setTimeout(() => {
+            closeStoryViewer();
+        }, 5000);
+        
+        // Animate progress bar
+        const progressBar = modal.querySelector('.story-progress-bar');
+        progressBar.style.animation = 'storyProgress 5s linear forwards';
+    }
+}
+
+function closeStoryViewer() {
+    const modal = document.querySelector('.story-viewer-modal');
+    if (modal) {
+        modal.remove();
     }
 }
 
@@ -870,26 +1000,179 @@ function loadAdoptions() {
 function createAdoptionElement(adoption) {
     const adoptionDiv = document.createElement('div');
     adoptionDiv.className = 'adoption-card';
+    
+    // Create features array
+    const features = [];
+    if (adoption.vaccinated) features.push('Vacunado');
+    if (adoption.sterilized) features.push('Esterilizado');
+    features.push(adoption.gender);
+    
+    const featuresHTML = features.map(feature => 
+        `<span class="adoption-feature">${feature}</span>`
+    ).join('');
+    
     adoptionDiv.innerHTML = `
+        <div class="adoption-status-badge">${adoption.status}</div>
         <img src="${adoption.image}" alt="${adoption.name}" class="adoption-image">
         <div class="adoption-info">
             <h3 class="adoption-name">${adoption.name}</h3>
             <p class="adoption-details">${adoption.breed} • ${adoption.age}</p>
-            <p class="adoption-location">📍 ${adoption.location}</p>
-            <p style="color: #666; line-height: 1.6; margin-bottom: 1rem;">${adoption.description}</p>
-            <p style="color: #ff6b6b; font-size: 0.9rem; margin-bottom: 1.5rem;"><i class="fab fa-whatsapp"></i> ${adoption.contact}</p>
-            <button class="btn-adopt" onclick="adoptPet(${adoption.id})">
-                <i class="fas fa-heart"></i> Adoptar
-            </button>
+            
+            <div class="adoption-foundation">
+                <div class="adoption-foundation-name">${adoption.foundation}</div>
+                <div class="adoption-location">📍 ${adoption.location}</div>
+            </div>
+            
+            <p class="adoption-description">${adoption.description}</p>
+            
+            <div class="adoption-features">
+                ${featuresHTML}
+            </div>
+            
+            <div class="adoption-actions">
+                <button class="btn-contact" onclick="contactFoundation(${adoption.id})">
+                    <i class="fas fa-phone"></i> Contactar
+                </button>
+                <button class="btn-adopt" onclick="adoptPet(${adoption.id})">
+                    <i class="fas fa-heart"></i> Adoptar
+                </button>
+            </div>
         </div>
     `;
     return adoptionDiv;
 }
 
+function contactFoundation(adoptionId) {
+    const pet = sampleAdoptions.find(a => a.id === adoptionId);
+    if (!pet) return;
+    
+    // Create contact modal
+    const modal = document.createElement('div');
+    modal.className = 'adoption-contact-modal';
+    modal.innerHTML = `
+        <div class="adoption-contact-content">
+            <span class="close" onclick="closeAdoptionContact()">&times;</span>
+            <div class="contact-header">
+                <img src="${pet.image}" alt="${pet.name}" class="contact-pet-image">
+                <div class="contact-pet-info">
+                    <h3>${pet.name}</h3>
+                    <p>${pet.breed} • ${pet.age} • ${pet.gender}</p>
+                </div>
+            </div>
+            
+            <div class="contact-foundation">
+                <h4>${pet.foundation}</h4>
+                <p>📍 ${pet.location}</p>
+                
+                <div class="contact-options">
+                    ${pet.phone ? `
+                        <a href="tel:${pet.phone}" class="contact-btn phone-btn">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <strong>Llamar</strong>
+                                <span>${pet.phone}</span>
+                            </div>
+                        </a>
+                    ` : ''}
+                    
+                    ${pet.whatsapp && pet.whatsapp !== 'Contactar vía Instagram' ? `
+                        <a href="https://wa.me/${pet.whatsapp.replace(/[^0-9]/g, '')}" target="_blank" class="contact-btn whatsapp-btn">
+                            <i class="fab fa-whatsapp"></i>
+                            <div>
+                                <strong>WhatsApp</strong>
+                                <span>${pet.whatsapp}</span>
+                            </div>
+                        </a>
+                    ` : ''}
+                    
+                    ${pet.instagram ? `
+                        <a href="https://instagram.com/${pet.instagram.replace('@', '')}" target="_blank" class="contact-btn instagram-btn">
+                            <i class="fab fa-instagram"></i>
+                            <div>
+                                <strong>Instagram</strong>
+                                <span>${pet.instagram}</span>
+                            </div>
+                        </a>
+                    ` : ''}
+                </div>
+                
+                <div class="contact-message">
+                    <p><strong>Mensaje sugerido:</strong></p>
+                    <div class="suggested-message">
+                        "Hola, vi a ${pet.name} en PawNet y me interesa conocer más sobre el proceso de adopción. ¿Podrían darme más información? Gracias."
+                    </div>
+                    <button class="btn-copy" onclick="copyMessage('${pet.name}')">
+                        <i class="fas fa-copy"></i> Copiar mensaje
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closeAdoptionContact() {
+    const modal = document.querySelector('.adoption-contact-modal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function copyMessage(petName) {
+    const message = `Hola, vi a ${petName} en PawNet y me interesa conocer más sobre el proceso de adopción. ¿Podrían darme más información? Gracias.`;
+    navigator.clipboard.writeText(message).then(() => {
+        showNotification('Mensaje copiado al portapapeles ✅');
+    });
+}
+
 function adoptPet(adoptionId) {
     const pet = sampleAdoptions.find(a => a.id === adoptionId);
     if (pet) {
-        alert(`¡Gracias por tu interés en adoptar a ${pet.name}! 🏠 Contacta directamente: ${pet.contact}. ¡Dale una segunda oportunidad en Panamá!`);
+        // Show adoption interest modal
+        const modal = document.createElement('div');
+        modal.className = 'adoption-interest-modal';
+        modal.innerHTML = `
+            <div class="adoption-interest-content">
+                <div class="interest-header">
+                    <h2>¡Interés en Adopción! 🏠</h2>
+                    <p>Gracias por tu interés en adoptar a <strong>${pet.name}</strong></p>
+                </div>
+                
+                <div class="adoption-steps">
+                    <h3>Próximos pasos:</h3>
+                    <ol>
+                        <li>Contacta a <strong>${pet.foundation}</strong></li>
+                        <li>Programa una visita para conocer a ${pet.name}</li>
+                        <li>Completa el proceso de adopción</li>
+                        <li>¡Dale un hogar lleno de amor! 💕</li>
+                    </ol>
+                </div>
+                
+                <div class="adoption-actions">
+                    <button class="btn-primary" onclick="contactFoundation(${adoptionId}); closeAdoptionInterest();">
+                        Contactar Fundación
+                    </button>
+                    <button class="btn-secondary" onclick="closeAdoptionInterest()">
+                        Cerrar
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Auto close after 10 seconds
+        setTimeout(() => {
+            closeAdoptionInterest();
+        }, 10000);
+    }
+}
+
+function closeAdoptionInterest() {
+    const modal = document.querySelector('.adoption-interest-modal');
+    if (modal) {
+        modal.remove();
     }
 }
 
@@ -1045,6 +1328,8 @@ function publishPhoto() {
 
         // Add to beginning of posts array
         samplePosts.unshift(newPost);
+        console.log('✅ Nueva foto agregada:', newPost);
+        console.log('📋 Total posts:', samplePosts.length);
 
         // Reload feed
         loadFeed();
@@ -1059,6 +1344,12 @@ function publishPhoto() {
 
         // Show success notification
         showNotification('¡Foto publicada exitosamente! 🎉');
+        
+        // Update user profile if we're on the profile section
+        const profileSection = document.getElementById('profile');
+        if (profileSection && profileSection.classList.contains('active')) {
+            loadUserProfile();
+        }
 
     }, 2000);
 }
@@ -1148,8 +1439,16 @@ function cancelVideoUpload() {
 }
 
 function publishVideo() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para publicar videos 🔒');
+        closeModal('uploadVideoModal');
+        showLogin();
+        return;
+    }
+    
     const caption = document.getElementById('videoCaption').value;
-    const location = document.getElementById('videoLocation').value || 'Panamá';
+    const location = document.getElementById('videoLocation').value || currentUser.location || 'Panamá';
 
     if (!window.currentVideoFile) {
         showNotification('No hay video seleccionado 🎥');
@@ -1172,9 +1471,9 @@ function publishVideo() {
         // Create new post with video
         const newPost = {
             id: samplePosts.length + 1,
-            user: "Tu Mascota",
-            userAvatar: "https://via.placeholder.com/50",
-            image: window.currentVideoFile.data, // For now, we'll use the video as image
+            user: currentUser.petName || currentUser.firstName,
+            userAvatar: currentUser.petAvatar || currentUser.avatar || "https://via.placeholder.com/50",
+            image: window.currentVideoFile.data,
             caption: caption + " 🎥",
             likes: 0,
             comments: 0,
@@ -1199,6 +1498,12 @@ function publishVideo() {
 
         // Show success notification
         showNotification('¡Video publicado exitosamente! 🎬');
+        
+        // Update user profile if we're on the profile section
+        const profileSection = document.getElementById('profile');
+        if (profileSection && profileSection.classList.contains('active')) {
+            loadUserProfile();
+        }
 
     }, 3000);
 }
@@ -1250,6 +1555,14 @@ window.onclick = function (event) {
     if (event.target === uploadVideoModal) {
         uploadVideoModal.style.display = 'none';
         cancelVideoUpload();
+    }
+    
+    // Close adoption modals
+    if (event.target.classList.contains('adoption-contact-modal')) {
+        closeAdoptionContact();
+    }
+    if (event.target.classList.contains('adoption-interest-modal')) {
+        closeAdoptionInterest();
     }
 }
 
@@ -1408,19 +1721,29 @@ function isValidEmail(email) {
 
 // Funciones adicionales para mejorar la experiencia
 function addNewPost(content, image) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
     const newPost = {
         id: samplePosts.length + 1,
-        user: "Tu Mascota",
-        userAvatar: "https://via.placeholder.com/50",
+        user: currentUser.petName || currentUser.firstName,
+        userAvatar: currentUser.petAvatar || currentUser.avatar || "https://via.placeholder.com/50",
         image: image || "https://via.placeholder.com/500x400",
         caption: content,
         likes: 0,
         comments: 0,
-        timeAgo: "Ahora"
+        timeAgo: "Ahora",
+        location: currentUser.location || "Panamá"
     };
 
     samplePosts.unshift(newPost);
     loadFeed();
+    
+    // Update user profile if we're on the profile section
+    const profileSection = document.getElementById('profile');
+    if (profileSection && profileSection.classList.contains('active')) {
+        loadUserProfile();
+    }
 }
 
 // Simulación de notificaciones
@@ -1569,11 +1892,17 @@ function loadUserPosts() {
     if (!currentUser) return;
 
     const userPostsGrid = document.getElementById('userPostsGrid');
-    const userPosts = samplePosts.filter(post =>
-        post.user === (currentUser.petName || currentUser.firstName)
-    );
+    const userName = currentUser.petName || currentUser.firstName;
+    const userPosts = samplePosts.filter(post => post.user === userName);
+    
+    console.log('👤 Usuario actual:', userName);
+    console.log('📋 Posts del usuario:', userPosts.length);
+    console.log('📋 Todos los posts:', samplePosts.map(p => ({ user: p.user, caption: p.caption.substring(0, 30) })));
 
-    document.getElementById('userPostCount').textContent = `${userPosts.length} Posts`;
+    const userPostCountElement = document.getElementById('userPostCount');
+    if (userPostCountElement) {
+        userPostCountElement.textContent = `${userPosts.length} Posts`;
+    }
 
     if (userPosts.length === 0) {
         userPostsGrid.innerHTML = `
@@ -1667,3 +1996,21 @@ function backToMatches() {
     navLinks.forEach(l => l.classList.remove('active'));
     document.querySelector('a[href="#matches"]').classList.add('active');
 }
+
+// Debug function to check posts
+function debugPosts() {
+    console.log('🔍 Debug de posts:');
+    console.log('Total posts:', samplePosts.length);
+    samplePosts.forEach((post, index) => {
+        console.log(`Post ${index + 1}:`, {
+            user: post.user,
+            hasImage: !!post.image,
+            imageType: typeof post.image,
+            imageLength: post.image ? post.image.length : 0,
+            caption: post.caption.substring(0, 50) + '...'
+        });
+    });
+}
+
+// Call this function from console to debug: debugPosts()
+window.debugPosts = debugPosts;
