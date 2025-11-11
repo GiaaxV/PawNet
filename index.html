@@ -5,6 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PawNet - Red Social para Mascotas 🐾</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="feed.css">
+    <link rel="stylesheet" href="stories.css">
+    <link rel="stylesheet" href="reels.css">
+    <link rel="stylesheet" href="matches.css">
+    <link rel="stylesheet" href="adoption.css">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="chat.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -33,27 +40,27 @@
                 <h3>Menú</h3>
             </div>
             <nav class="sidebar-nav">
-                <a href="#home" class="sidebar-link active" onclick="showSection('home')">
+                <a href="#home" class="sidebar-link active" onclick="event.preventDefault(); showSection('home');">
                     <i class="fas fa-home"></i>
                     <span>Inicio</span>
                 </a>
-                <a href="#stories" class="sidebar-link" onclick="showSection('stories')">
+                <a href="#stories" class="sidebar-link" onclick="event.preventDefault(); showSection('stories');">
                     <i class="fas fa-book-open"></i>
                     <span>Historias</span>
                 </a>
-                <a href="#reels" class="sidebar-link" onclick="showSection('reels')">
+                <a href="#reels" class="sidebar-link" onclick="event.preventDefault(); showSection('reels');">
                     <i class="fas fa-play-circle"></i>
                     <span>Reels</span>
                 </a>
-                <a href="#matches" class="sidebar-link" onclick="showSection('matches')">
+                <a href="#matches" class="sidebar-link" onclick="event.preventDefault(); showSection('matches');">
                     <i class="fas fa-heart"></i>
                     <span>Encuentra Pareja</span>
                 </a>
-                <a href="#adoption" class="sidebar-link" onclick="showSection('adoption')">
+                <a href="#adoption" class="sidebar-link" onclick="event.preventDefault(); showSection('adoption');">
                     <i class="fas fa-home"></i>
                     <span>Adopciones</span>
                 </a>
-                <a href="#profile" class="sidebar-link" onclick="showSection('profile')">
+                <a href="#profile" class="sidebar-link" onclick="event.preventDefault(); showSection('profile');">
                     <i class="fas fa-user"></i>
                     <span>Mi Perfil</span>
                 </a>
@@ -149,7 +156,7 @@
                 <h2 class="section-title">Encuentra Pareja para tu Mascota 💕</h2>
                 <div class="matches-container">
                     <div class="match-filters">
-                        <select class="filter-select" id="animalTypeFilter" onchange="updateBreedOptions()">
+                        <select class="filter-select" id="animalTypeFilter">
                             <option value="">Tipo de animal</option>
                             <option value="dog">Perro</option>
                             <option value="cat">Gato</option>
@@ -174,11 +181,11 @@
                             <option value="panama-oeste">Panamá Oeste</option>
                             <option value="veraguas">Veraguas</option>
                         </select>
-                        <select class="filter-select">
-                            <option>Edad</option>
-                            <option>Cachorro (0-1 año)</option>
-                            <option>Joven (1-3 años)</option>
-                            <option>Adulto (3+ años)</option>
+                        <select class="filter-select" id="ageFilter">
+                            <option value="">Edad</option>
+                            <option value="puppy">Cachorro (0-1 año)</option>
+                            <option value="young">Joven (1-3 años)</option>
+                            <option value="adult">Adulto (3+ años)</option>
                         </select>
                     </div>
                     <div class="matches-grid" id="matchesGrid">
@@ -232,7 +239,7 @@
             <div class="container">
                 <div class="chat-container">
                     <div class="chat-header">
-                        <button class="btn-back" onclick="backToMatches()">
+                        <button class="btn-back" id="backToMatchesBtn">
                             <i class="fas fa-arrow-left"></i> Volver a Búsqueda
                         </button>
                         <div class="match-info" id="matchInfo">
@@ -246,16 +253,16 @@
                     
                     <div class="chat-input-container">
                         <div class="chat-actions">
-                            <button class="chat-action-btn" onclick="requestMeeting()">
+                            <button class="chat-action-btn" id="requestMeetingBtn">
                                 <i class="fas fa-calendar"></i> Solicitar Encuentro
                             </button>
-                            <button class="chat-action-btn" onclick="shareLocation()">
+                            <button class="chat-action-btn" id="shareLocationBtn">
                                 <i class="fas fa-map-marker-alt"></i> Compartir Ubicación
                             </button>
                         </div>
                         <div class="message-input-area">
-                            <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleMessageKeyPress(event)">
-                            <button class="btn-send" onclick="sendMessage()">
+                            <input type="text" id="messageInput" placeholder="Escribe un mensaje...">
+                            <button class="btn-send" id="sendMessageBtn">
                                 <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>

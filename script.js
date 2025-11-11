@@ -454,10 +454,41 @@ document.addEventListener('DOMContentLoaded', function () {
         console.log('✅ Funciones de upload inicializadas');
 
         console.log('🎉 PawNet cargado completamente!');
+        
+        // Test navigation after everything is loaded
+        setTimeout(() => {
+            console.log('🧪 Probando navegación...');
+            testNavigation();
+        }, 1000);
+        
     } catch (error) {
         console.error('❌ Error al inicializar PawNet:', error);
     }
 });
+
+// Test function to verify navigation works
+function testNavigation() {
+    const sections = document.querySelectorAll('.section');
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    
+    console.log('🔍 Test de navegación:');
+    console.log('   Secciones encontradas:', sections.length);
+    console.log('   Enlaces de sidebar:', sidebarLinks.length);
+    
+    sections.forEach(section => {
+        console.log(`   - ${section.id}: ${section.classList.contains('active') ? 'ACTIVA' : 'inactiva'}`);
+    });
+    
+    // Test clicking on stories
+    console.log('🧪 Probando click en Stories...');
+    showSection('stories');
+}
+
+// Simple navigation function for direct calls
+window.navigateToSection = function(sectionId) {
+    console.log('🎯 Navegación directa a:', sectionId);
+    showSection(sectionId);
+}
 
 // Initialize upload features
 function initializeUploadFeatures() {
@@ -500,21 +531,36 @@ function initializeUploadFeatures() {
 // Navegación
 function setupNavigation() {
     console.log('🔧 Configurando navegación...');
+    
+    // Setup header navigation
     const navLinks = document.querySelectorAll('.nav-link');
-    console.log('📍 Enlaces encontrados:', navLinks.length);
+    console.log('📍 Enlaces de header encontrados:', navLinks.length);
 
     navLinks.forEach(link => {
         link.addEventListener('click', function (e) {
             e.preventDefault();
-            console.log('🔗 Click en navegación:', this.getAttribute('href'));
+            console.log('🔗 Click en navegación header:', this.getAttribute('href'));
 
-            // Remover clase active de todos los links
-            navLinks.forEach(l => l.classList.remove('active'));
+            const targetSection = this.getAttribute('href').substring(1);
+            console.log('📄 Mostrando sección:', targetSection);
+            showSection(targetSection);
+        });
+    });
 
-            // Agregar clase active al link clickeado
-            this.classList.add('active');
+    // Setup sidebar navigation
+    const sidebarLinks = document.querySelectorAll('.sidebar-link');
+    console.log('📍 Enlaces de sidebar encontrados:', sidebarLinks.length);
 
-            // Mostrar la sección correspondiente
+    sidebarLinks.forEach(link => {
+        // Skip dashboard link as it goes to external page
+        if (link.getAttribute('href') === 'dashboard.html') {
+            return;
+        }
+
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            console.log('🔗 Click en navegación sidebar:', this.getAttribute('href'));
+
             const targetSection = this.getAttribute('href').substring(1);
             console.log('📄 Mostrando sección:', targetSection);
             showSection(targetSection);
@@ -528,13 +574,17 @@ function showSection(sectionId) {
     // Ocultar todas las secciones
     const sections = document.querySelectorAll('.section');
     console.log('📋 Secciones encontradas:', sections.length);
-    sections.forEach(section => section.classList.remove('active'));
+    sections.forEach((section, index) => {
+        console.log(`   Sección ${index}: ${section.id} - ${section.classList.contains('active') ? 'activa' : 'inactiva'}`);
+        section.classList.remove('active');
+    });
 
     // Mostrar la sección seleccionada
     const targetSection = document.getElementById(sectionId);
     if (targetSection) {
         targetSection.classList.add('active');
         console.log('✅ Sección activada:', sectionId);
+        console.log('   Clases de la sección:', targetSection.className);
 
         // Update navigation links
         updateNavigation(sectionId);
@@ -543,8 +593,25 @@ function showSection(sectionId) {
         if (sectionId === 'profile') {
             loadUserProfile();
         }
+
+        // Load specific content based on section
+        switch(sectionId) {
+            case 'stories':
+                loadStories();
+                break;
+            case 'reels':
+                loadReels();
+                break;
+            case 'matches':
+                loadMatches();
+                break;
+            case 'adoption':
+                loadAdoptions();
+                break;
+        }
     } else {
         console.error('❌ Sección no encontrada:', sectionId);
+        console.log('   Secciones disponibles:', Array.from(sections).map(s => s.id));
     }
 }
 
@@ -603,17 +670,27 @@ function createPostElement(post) {
             ${mediaElement}
         </div>
         <div class="post-actions-bar">
-            <button class="action-btn ${likedPosts.has(post.id) ? 'liked' : ''}" onclick="toggleLike(${post.id})">
-                <i class="fas fa-heart"></i> ${post.likes}
+            <button class="action-btn like-btn ${likedPosts.has(post.id) ? 'liked' : ''}" data-post-id="${post.id}">
+                <i class="fas fa-heart"></i> <span class="like-count">${post.likes}</span>
             </button>
-            <button class="action-btn" onclick="showComments(${post.id})">
+            <button class="action-btn comment-btn" data-post-id="${post.id}">
                 <i class="fas fa-comment"></i> ${post.comments}
             </button>
-            <button class="action-btn" onclick="sharePost(${post.id})">
+            <button class="action-btn share-btn" data-post-id="${post.id}">
                 <i class="fas fa-share"></i> Compartir
             </button>
         </div>
     `;
+    
+    // Add event listeners
+    const likeBtn = postDiv.querySelector('.like-btn');
+    const commentBtn = postDiv.querySelector('.comment-btn');
+    const shareBtn = postDiv.querySelector('.share-btn');
+    
+    likeBtn.addEventListener('click', () => toggleLike(post.id));
+    commentBtn.addEventListener('click', () => showComments(post.id));
+    shareBtn.addEventListener('click', () => sharePost(post.id));
+    
     return postDiv;
 }
 
@@ -642,17 +719,19 @@ function loadStories() {
 function createStoryBarElement(story) {
     const storyDiv = document.createElement('div');
     storyDiv.className = 'story-item';
+    storyDiv.style.cursor = 'pointer';
     storyDiv.innerHTML = `
         <img src="${story.userAvatar}" alt="${story.user}" class="story-avatar">
         <p class="story-username">${story.user}</p>
     `;
-    storyDiv.onclick = () => viewStory(story.id);
+    storyDiv.addEventListener('click', () => viewStory(story.id));
     return storyDiv;
 }
 
 function createStoryGridElement(story) {
     const storyDiv = document.createElement('div');
     storyDiv.className = 'story-card';
+    storyDiv.style.cursor = 'pointer';
     storyDiv.innerHTML = `
         <div class="story-time">${story.timeAgo}</div>
         <img src="${story.background}" alt="Story background" class="story-background">
@@ -665,7 +744,7 @@ function createStoryGridElement(story) {
             <p class="story-location">📍 ${story.location}</p>
         </div>
     `;
-    storyDiv.onclick = () => viewStory(story.id);
+    storyDiv.addEventListener('click', () => viewStory(story.id));
     return storyDiv;
 }
 
@@ -677,7 +756,7 @@ function viewStory(storyId) {
         modal.className = 'story-viewer-modal';
         modal.innerHTML = `
             <div class="story-viewer">
-                <button class="story-close" onclick="closeStoryViewer()">&times;</button>
+                <button class="story-close">&times;</button>
                 <div class="story-progress">
                     <div class="story-progress-bar"></div>
                 </div>
@@ -694,6 +773,10 @@ function viewStory(storyId) {
             </div>
         `;
         document.body.appendChild(modal);
+        
+        // Add close button event listener
+        const closeBtn = modal.querySelector('.story-close');
+        closeBtn.addEventListener('click', closeStoryViewer);
         
         // Auto close after 5 seconds
         setTimeout(() => {
@@ -730,7 +813,7 @@ function createReelElement(reel) {
     reelDiv.className = 'reel-item';
     reelDiv.innerHTML = `
         <img src="${reel.video}" alt="Reel video" class="reel-video">
-        <button class="reel-play-btn" onclick="playReel(${reel.id})">
+        <button class="reel-play-btn">
             <i class="fas fa-play"></i>
         </button>
         <div class="reel-overlay">
@@ -742,20 +825,32 @@ function createReelElement(reel) {
             <p style="font-size: 0.8rem; opacity: 0.8;">📍 ${reel.location}</p>
         </div>
         <div class="reel-actions">
-            <button class="reel-action-btn ${likedPosts.has(reel.id + 1000) ? 'liked' : ''}" onclick="toggleReelLike(${reel.id})">
+            <button class="reel-action-btn reel-like-btn ${likedPosts.has(reel.id + 1000) ? 'liked' : ''}" data-reel-id="${reel.id}">
                 <i class="fas fa-heart"></i>
                 <span style="font-size: 0.7rem; margin-top: 2px;">${reel.likes}</span>
             </button>
-            <button class="reel-action-btn" onclick="showReelComments(${reel.id})">
+            <button class="reel-action-btn reel-comment-btn" data-reel-id="${reel.id}">
                 <i class="fas fa-comment"></i>
                 <span style="font-size: 0.7rem; margin-top: 2px;">${reel.comments}</span>
             </button>
-            <button class="reel-action-btn" onclick="shareReel(${reel.id})">
+            <button class="reel-action-btn reel-share-btn" data-reel-id="${reel.id}">
                 <i class="fas fa-share"></i>
                 <span style="font-size: 0.7rem; margin-top: 2px;">${reel.shares}</span>
             </button>
         </div>
     `;
+    
+    // Add event listeners
+    const playBtn = reelDiv.querySelector('.reel-play-btn');
+    const likeBtn = reelDiv.querySelector('.reel-like-btn');
+    const commentBtn = reelDiv.querySelector('.reel-comment-btn');
+    const shareBtn = reelDiv.querySelector('.reel-share-btn');
+    
+    playBtn.addEventListener('click', () => playReel(reel.id));
+    likeBtn.addEventListener('click', () => toggleReelLike(reel.id));
+    commentBtn.addEventListener('click', () => showReelComments(reel.id));
+    shareBtn.addEventListener('click', () => shareReel(reel.id));
+    
     return reelDiv;
 }
 
@@ -819,15 +914,53 @@ function sharePost(postId) {
 // Matches Functions
 function loadMatches() {
     const matchesGrid = document.getElementById('matchesGrid');
+    if (!matchesGrid) return;
+    
     matchesGrid.innerHTML = '';
 
     sampleMatches.forEach(match => {
         const matchElement = createMatchElement(match);
         matchesGrid.appendChild(matchElement);
     });
+    
+    // Setup filters
+    setupMatchFilters();
+}
+
+function setupMatchFilters() {
+    const animalTypeFilter = document.getElementById('animalTypeFilter');
+    const breedFilter = document.getElementById('breedFilter');
+    const provinceFilter = document.getElementById('provinceFilter');
+    const ageFilter = document.getElementById('ageFilter');
+    
+    if (animalTypeFilter) {
+        animalTypeFilter.addEventListener('change', updateBreedOptions);
+    }
+    
+    // Add filter functionality (can be expanded later)
+    if (breedFilter) {
+        breedFilter.addEventListener('change', filterMatches);
+    }
+    
+    if (provinceFilter) {
+        provinceFilter.addEventListener('change', filterMatches);
+    }
+    
+    if (ageFilter) {
+        ageFilter.addEventListener('change', filterMatches);
+    }
+}
+
+function filterMatches() {
+    // This function can be expanded to actually filter the matches
+    console.log('🔍 Filtrando matches...');
+    // For now, just reload all matches
+    // In the future, you can filter based on selected values
 }
 
 function createMatchElement(match) {
+    console.log('🎴 Creando tarjeta de match para:', match.name, 'ID:', match.id);
+    
     const matchDiv = document.createElement('div');
     matchDiv.className = 'match-card';
     matchDiv.innerHTML = `
@@ -838,28 +971,59 @@ function createMatchElement(match) {
             <p class="match-details">${match.breed} • ${match.age}<br>📍 ${match.location}, ${match.district}</p>
             <div class="match-personality">"${match.personality}"</div>
             <div class="match-actions">
-                <button class="btn-match btn-pass" onclick="passMatch(${match.id})">
+                <button class="btn-match btn-pass" data-match-id="${match.id}">
                     <i class="fas fa-times"></i> Pasar
                 </button>
-                <button class="btn-match btn-like" onclick="likeMatch(${match.id})">
+                <button class="btn-match btn-like" data-match-id="${match.id}">
                     <i class="fas fa-heart"></i> Me gusta
                 </button>
             </div>
         </div>
     `;
+    
+    // Add event listeners
+    const passBtn = matchDiv.querySelector('.btn-pass');
+    const likeBtn = matchDiv.querySelector('.btn-like');
+    
+    console.log('🔘 Botones encontrados - Pass:', !!passBtn, 'Like:', !!likeBtn);
+    
+    if (passBtn) {
+        passBtn.addEventListener('click', (e) => {
+            console.log('❌ Click en Pasar para:', match.name);
+            e.stopPropagation();
+            passMatch(match.id);
+        });
+    }
+    
+    if (likeBtn) {
+        likeBtn.addEventListener('click', (e) => {
+            console.log('💕 Click en Me gusta para:', match.name);
+            e.stopPropagation();
+            likeMatch(match.id);
+        });
+    }
+    
     return matchDiv;
 }
 
 function likeMatch(matchId) {
+    console.log('💕 likeMatch llamada con ID:', matchId);
+    
     const currentUser = getCurrentUser();
+    console.log('👤 Usuario actual:', currentUser);
+    
     if (!currentUser) {
+        console.log('⚠️ No hay usuario logueado');
         showNotification('Debes iniciar sesión para hacer matches 🔒');
         showLogin();
         return;
     }
 
     const match = sampleMatches.find(m => m.id === matchId);
+    console.log('🔍 Match encontrado:', match);
+    
     if (match) {
+        console.log('✅ Mostrando animación de match exitoso');
         // Show match success animation
         showMatchSuccess(match);
 
@@ -876,12 +1040,16 @@ function likeMatch(matchId) {
         const matches = JSON.parse(localStorage.getItem('pawnet_matches') || '[]');
         matches.push(matchRecord);
         localStorage.setItem('pawnet_matches', JSON.stringify(matches));
+        console.log('💾 Match guardado en localStorage');
 
         // Redirect to chat after animation
         setTimeout(() => {
+            console.log('💬 Redirigiendo al chat...');
             hideMatchSuccess();
             openChat(matchRecord, match);
         }, 2500);
+    } else {
+        console.error('❌ No se encontró el match con ID:', matchId);
     }
 }
 
@@ -924,8 +1092,8 @@ function loadChatInterface(matchRecord, matchData) {
 
     // Load match info
     matchInfo.innerHTML = `
-        <img src="${matchData.image}" alt="${matchData.name}" class="match-avatar">
-        <div class="match-details">
+        <img src="${matchData.image}" alt="${matchData.name}">
+        <div class="match-info-text">
             <h3>${matchData.name}</h3>
             <p>${matchData.breed} • ${matchData.age} • ${matchData.location}</p>
         </div>
@@ -938,6 +1106,55 @@ function loadChatInterface(matchRecord, matchData) {
     // Store current match for message sending
     window.currentMatch = matchRecord;
     window.currentMatchData = matchData;
+    
+    // Setup chat event listeners
+    setupChatEventListeners();
+}
+
+function setupChatEventListeners() {
+    // Back button
+    const backBtn = document.getElementById('backToMatchesBtn');
+    if (backBtn) {
+        backBtn.replaceWith(backBtn.cloneNode(true)); // Remove old listeners
+        const newBackBtn = document.getElementById('backToMatchesBtn');
+        newBackBtn.addEventListener('click', backToMatches);
+    }
+    
+    // Send message button
+    const sendBtn = document.getElementById('sendMessageBtn');
+    if (sendBtn) {
+        sendBtn.replaceWith(sendBtn.cloneNode(true));
+        const newSendBtn = document.getElementById('sendMessageBtn');
+        newSendBtn.addEventListener('click', sendMessage);
+    }
+    
+    // Message input (Enter key)
+    const messageInput = document.getElementById('messageInput');
+    if (messageInput) {
+        messageInput.replaceWith(messageInput.cloneNode(true));
+        const newMessageInput = document.getElementById('messageInput');
+        newMessageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+    
+    // Request meeting button
+    const meetingBtn = document.getElementById('requestMeetingBtn');
+    if (meetingBtn) {
+        meetingBtn.replaceWith(meetingBtn.cloneNode(true));
+        const newMeetingBtn = document.getElementById('requestMeetingBtn');
+        newMeetingBtn.addEventListener('click', requestMeeting);
+    }
+    
+    // Share location button
+    const locationBtn = document.getElementById('shareLocationBtn');
+    if (locationBtn) {
+        locationBtn.replaceWith(locationBtn.cloneNode(true));
+        const newLocationBtn = document.getElementById('shareLocationBtn');
+        newLocationBtn.addEventListener('click', shareLocation);
+    }
 }
 
 function displayMessages(messages) {
@@ -1030,15 +1247,23 @@ function createAdoptionElement(adoption) {
             </div>
             
             <div class="adoption-actions">
-                <button class="btn-contact" onclick="contactFoundation(${adoption.id})">
+                <button class="btn-contact" data-adoption-id="${adoption.id}">
                     <i class="fas fa-phone"></i> Contactar
                 </button>
-                <button class="btn-adopt" onclick="adoptPet(${adoption.id})">
+                <button class="btn-adopt" data-adoption-id="${adoption.id}">
                     <i class="fas fa-heart"></i> Adoptar
                 </button>
             </div>
         </div>
     `;
+    
+    // Add event listeners
+    const contactBtn = adoptionDiv.querySelector('.btn-contact');
+    const adoptBtn = adoptionDiv.querySelector('.btn-adopt');
+    
+    contactBtn.addEventListener('click', () => contactFoundation(adoption.id));
+    adoptBtn.addEventListener('click', () => adoptPet(adoption.id));
+    
     return adoptionDiv;
 }
 
@@ -1857,9 +2082,15 @@ function loadUserProfile() {
                 <i class="fas fa-user-circle profile-login-icon"></i>
                 <h2>Inicia sesión para ver tu perfil</h2>
                 <p>Conecta con otros dueños de mascotas y comparte momentos especiales</p>
-                <button class="btn-primary" onclick="showLogin()">Iniciar Sesión</button>
+                <button class="btn-primary" id="profileLoginBtn">Iniciar Sesión</button>
             </div>
         `;
+        
+        // Add event listener to login button
+        const loginBtn = document.getElementById('profileLoginBtn');
+        if (loginBtn) {
+            loginBtn.addEventListener('click', showLogin);
+        }
         return;
     }
 
@@ -1880,8 +2111,14 @@ function loadUserProfile() {
                 <p><strong>Ubicación:</strong> ${currentUser.location || 'No especificada'}</p>
             </div>
         </div>
-        <button class="btn-primary" onclick="goToDashboard()">Editar Perfil</button>
+        <button class="btn-primary" id="editProfileBtn">Editar Perfil</button>
     `;
+
+    // Add event listener to edit profile button
+    const editBtn = document.getElementById('editProfileBtn');
+    if (editBtn) {
+        editBtn.addEventListener('click', goToDashboard);
+    }
 
     loadUserPosts();
 }
@@ -1910,9 +2147,15 @@ function loadUserPosts() {
                 <i class="fas fa-camera no-posts-icon"></i>
                 <h3>Aún no has publicado nada</h3>
                 <p>Comparte los momentos especiales de tu mascota</p>
-                <button class="btn-primary" onclick="uploadPhoto()">Subir Primera Foto</button>
+                <button class="btn-primary" id="uploadFirstPhotoBtn">Subir Primera Foto</button>
             </div>
         `;
+        
+        // Add event listener to upload button
+        const uploadBtn = document.getElementById('uploadFirstPhotoBtn');
+        if (uploadBtn) {
+            uploadBtn.addEventListener('click', uploadPhoto);
+        }
         return;
     }
 

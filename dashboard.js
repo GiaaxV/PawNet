@@ -1,5 +1,5 @@
 // Dashboard JavaScript
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initializeDashboard();
     loadUserData();
     setupDashboardNavigation();
@@ -14,10 +14,10 @@ function initializeDashboard() {
         window.location.href = 'index.html';
         return;
     }
-    
+
     // Update user info in header
     updateUserHeader(currentUser);
-    
+
     // Load saved settings
     loadSavedSettings();
 }
@@ -26,11 +26,11 @@ function initializeDashboard() {
 function updateUserHeader(user) {
     const userAvatar = document.getElementById('userAvatar');
     const userName = document.getElementById('userName');
-    
+
     if (userAvatar && user.avatar) {
         userAvatar.src = user.avatar;
     }
-    
+
     if (userName) {
         userName.textContent = user.petName || user.firstName || 'Usuario';
     }
@@ -40,15 +40,15 @@ function updateUserHeader(user) {
 function setupDashboardNavigation() {
     const menuItems = document.querySelectorAll('.menu-item');
     const sections = document.querySelectorAll('.dashboard-section');
-    
+
     menuItems.forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const targetSection = this.getAttribute('data-section');
-            
+
             // Remove active class from all items and sections
             menuItems.forEach(mi => mi.classList.remove('active'));
             sections.forEach(s => s.classList.remove('active'));
-            
+
             // Add active class to clicked item and target section
             this.classList.add('active');
             document.getElementById(targetSection).classList.add('active');
@@ -60,7 +60,7 @@ function setupDashboardNavigation() {
 function loadUserData() {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
-    
+
     // Load profile data
     if (currentUser.firstName) document.getElementById('firstName').value = currentUser.firstName;
     if (currentUser.lastName) document.getElementById('lastName').value = currentUser.lastName;
@@ -71,7 +71,7 @@ function loadUserData() {
     if (currentUser.avatar) {
         document.getElementById('avatarPreview').src = currentUser.avatar;
     }
-    
+
     // Load pet data
     if (currentUser.petName) document.getElementById('petName').value = currentUser.petName;
     if (currentUser.petType) document.getElementById('petType').value = currentUser.petType;
@@ -89,31 +89,31 @@ function loadUserData() {
 function setupFormHandlers() {
     // Profile form
     const profileForm = document.getElementById('profileForm');
-    profileForm.addEventListener('submit', function(e) {
+    profileForm.addEventListener('submit', function (e) {
         e.preventDefault();
         saveProfileData();
     });
-    
+
     // Pet form
     const petForm = document.getElementById('petForm');
-    petForm.addEventListener('submit', function(e) {
+    petForm.addEventListener('submit', function (e) {
         e.preventDefault();
         savePetData();
     });
-    
+
     // Avatar upload handlers
-    document.getElementById('avatarInput').addEventListener('change', function(e) {
+    document.getElementById('avatarInput').addEventListener('change', function (e) {
         handleAvatarUpload(e.target.files[0], 'avatarPreview');
     });
-    
-    document.getElementById('petAvatarInput').addEventListener('change', function(e) {
+
+    document.getElementById('petAvatarInput').addEventListener('change', function (e) {
         handleAvatarUpload(e.target.files[0], 'petAvatarPreview');
     });
-    
+
     // Theme selection
     const themeOptions = document.querySelectorAll('.theme-option');
     themeOptions.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function () {
             themeOptions.forEach(opt => opt.classList.remove('active'));
             this.classList.add('active');
         });
@@ -124,7 +124,7 @@ function setupFormHandlers() {
 function saveProfileData() {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
-    
+
     // Get form data
     const profileData = {
         firstName: document.getElementById('firstName').value,
@@ -133,16 +133,16 @@ function saveProfileData() {
         location: document.getElementById('location').value,
         bio: document.getElementById('bio').value
     };
-    
+
     // Update user object
     Object.assign(currentUser, profileData);
-    
+
     // Save to localStorage
     saveCurrentUser(currentUser);
-    
+
     // Show success message
     showDashboardMessage('Perfil actualizado exitosamente! ✅', 'success');
-    
+
     // Update header
     updateUserHeader(currentUser);
 }
@@ -151,7 +151,7 @@ function saveProfileData() {
 function savePetData() {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
-    
+
     // Get form data
     const petData = {
         petName: document.getElementById('petName').value,
@@ -162,16 +162,16 @@ function savePetData() {
         petWeight: parseFloat(document.getElementById('petWeight').value),
         petPersonality: document.getElementById('petPersonality').value
     };
-    
+
     // Update user object
     Object.assign(currentUser, petData);
-    
+
     // Save to localStorage
     saveCurrentUser(currentUser);
-    
+
     // Show success message
     showDashboardMessage('Perfil de mascota actualizado exitosamente! 🐾', 'success');
-    
+
     // Update header
     updateUserHeader(currentUser);
 }
@@ -182,17 +182,17 @@ function handleAvatarUpload(file, previewId) {
         showDashboardMessage('Por favor selecciona una imagen válida 📸', 'error');
         return;
     }
-    
+
     if (file.size > 5 * 1024 * 1024) {
         showDashboardMessage('La imagen es muy grande. Máximo 5MB 📏', 'error');
         return;
     }
-    
+
     const reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         const preview = document.getElementById(previewId);
         preview.src = e.target.result;
-        
+
         // Save to user data
         const currentUser = getCurrentUser();
         if (previewId === 'avatarPreview') {
@@ -202,7 +202,7 @@ function handleAvatarUpload(file, previewId) {
         }
         saveCurrentUser(currentUser);
         updateUserHeader(currentUser);
-        
+
         showDashboardMessage('Foto actualizada exitosamente! 📸', 'success');
     };
     reader.readAsDataURL(file);
@@ -221,18 +221,18 @@ function uploadPetAvatar() {
 function saveAppearanceSettings() {
     const activeTheme = document.querySelector('.theme-option.active').getAttribute('data-theme');
     const darkMode = document.getElementById('darkMode').checked;
-    
+
     const settings = {
         theme: activeTheme,
         darkMode: darkMode
     };
-    
+
     // Save to localStorage
     localStorage.setItem('pawnet_appearance', JSON.stringify(settings));
-    
+
     // Apply theme
     applyTheme(activeTheme, darkMode);
-    
+
     showDashboardMessage('Configuración de apariencia guardada! 🎨', 'success');
 }
 
@@ -240,17 +240,17 @@ function saveAppearanceSettings() {
 function applyTheme(theme, darkMode) {
     // Remove existing theme classes
     document.body.classList.remove('dark-mode', 'theme-ocean', 'theme-sunset', 'theme-forest');
-    
+
     // Apply dark mode
     if (darkMode) {
         document.body.classList.add('dark-mode');
     }
-    
+
     // Apply color theme
     if (theme !== 'default') {
         document.body.classList.add(`theme-${theme}`);
     }
-    
+
     // Update CSS variables based on theme
     const root = document.documentElement;
     switch (theme) {
@@ -280,16 +280,16 @@ function applyTheme(theme, darkMode) {
 function savePrivacySettings() {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
-    
+
     const privacySettings = {
         publicProfile: document.getElementById('publicProfile').checked,
         showInSearch: document.getElementById('showInSearch').checked,
         allowMessages: document.getElementById('allowMessages').checked
     };
-    
+
     currentUser.privacy = privacySettings;
     saveCurrentUser(currentUser);
-    
+
     showDashboardMessage('Configuración de privacidad guardada! 🔒', 'success');
 }
 
@@ -297,17 +297,17 @@ function savePrivacySettings() {
 function saveNotificationSettings() {
     const currentUser = getCurrentUser();
     if (!currentUser) return;
-    
+
     const notificationSettings = {
         likes: document.getElementById('notifyLikes').checked,
         comments: document.getElementById('notifyComments').checked,
         matches: document.getElementById('notifyMatches').checked,
         messages: document.getElementById('notifyMessages').checked
     };
-    
+
     currentUser.notifications = notificationSettings;
     saveCurrentUser(currentUser);
-    
+
     showDashboardMessage('Configuración de notificaciones guardada! 🔔', 'success');
 }
 
@@ -316,37 +316,37 @@ function changePassword() {
     const currentPassword = document.getElementById('currentPassword').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmPassword').value;
-    
+
     if (!currentPassword || !newPassword || !confirmPassword) {
         showDashboardMessage('Por favor completa todos los campos 📝', 'error');
         return;
     }
-    
+
     if (newPassword !== confirmPassword) {
         showDashboardMessage('Las contraseñas no coinciden 🔒', 'error');
         return;
     }
-    
+
     if (newPassword.length < 6) {
         showDashboardMessage('La contraseña debe tener al menos 6 caracteres 🔒', 'error');
         return;
     }
-    
+
     const currentUser = getCurrentUser();
     if (currentUser.password !== currentPassword) {
         showDashboardMessage('La contraseña actual es incorrecta 🔒', 'error');
         return;
     }
-    
+
     // Update password
     currentUser.password = newPassword;
     saveCurrentUser(currentUser);
-    
+
     // Clear form
     document.getElementById('currentPassword').value = '';
     document.getElementById('newPassword').value = '';
     document.getElementById('confirmPassword').value = '';
-    
+
     showDashboardMessage('Contraseña cambiada exitosamente! 🔒', 'success');
 }
 
@@ -356,13 +356,13 @@ function deleteAccount() {
         if (confirm('¿Realmente estás seguro? Se perderán todos tus datos, posts y matches.')) {
             // Remove user data
             localStorage.removeItem('pawnet_currentUser');
-            
+
             // Remove from users list
             const users = JSON.parse(localStorage.getItem('pawnet_users') || '[]');
             const currentUser = getCurrentUser();
             const updatedUsers = users.filter(user => user.email !== currentUser.email);
             localStorage.setItem('pawnet_users', JSON.stringify(updatedUsers));
-            
+
             // Redirect to home
             alert('Tu cuenta ha sido eliminada. Serás redirigido a la página principal.');
             window.location.href = 'index.html';
@@ -384,10 +384,10 @@ function loadSavedSettings() {
     if (appearanceSettings.darkMode) {
         document.getElementById('darkMode').checked = true;
     }
-    
+
     // Apply saved theme
     applyTheme(appearanceSettings.theme || 'default', appearanceSettings.darkMode || false);
-    
+
     // Load privacy settings
     const currentUser = getCurrentUser();
     if (currentUser && currentUser.privacy) {
@@ -395,7 +395,7 @@ function loadSavedSettings() {
         document.getElementById('showInSearch').checked = currentUser.privacy.showInSearch !== false;
         document.getElementById('allowMessages').checked = currentUser.privacy.allowMessages !== false;
     }
-    
+
     // Load notification settings
     if (currentUser && currentUser.notifications) {
         document.getElementById('notifyLikes').checked = currentUser.notifications.likes !== false;
@@ -410,17 +410,17 @@ function showDashboardMessage(message, type = 'success') {
     // Remove existing messages
     const existingMessages = document.querySelectorAll('.message');
     existingMessages.forEach(msg => msg.remove());
-    
+
     // Create new message
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${type}`;
     messageDiv.textContent = message;
-    
+
     // Insert at the top of the active section
     const activeSection = document.querySelector('.dashboard-section.active');
     const settingsCard = activeSection.querySelector('.settings-card');
     settingsCard.insertBefore(messageDiv, settingsCard.firstChild);
-    
+
     // Remove after 5 seconds
     setTimeout(() => {
         messageDiv.remove();
