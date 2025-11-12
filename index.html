@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,17 +14,17 @@
     <link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="chat.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
         <div class="container">
             <div class="logo">
-                <h1>
-                    <span class="logo-full">PawNet</span>
-                    <span class="logo-short">PawNet</span>
-                </h1>
+                <img src="logo.png" alt="PawNet" class="logo-image" onclick="showSection('home')"
+                    style="cursor: pointer;">
             </div>
             <div class="header-spacer"></div>
             <div class="auth-buttons">
@@ -66,10 +67,10 @@
                 </a>
                 <a href="dashboard.html" class="sidebar-link">
                     <i class="fas fa-cog"></i>
-                    <span>Dashboard</span>
+                    <span>Configuración</span>
                 </a>
             </nav>
-            
+
             <div class="sidebar-footer">
                 <div class="user-info" id="sidebarUserInfo" onclick="goToDashboard()">
                     <img src="https://via.placeholder.com/40" alt="Usuario" class="sidebar-avatar">
@@ -87,7 +88,7 @@
     <main class="main-content">
         <!-- Home Section -->
         <section id="home" class="section active">
-            <div class="container">
+            <div class="container home-layout">
                 <div class="feed-container">
                     <!-- Stories Bar -->
                     <div class="stories-bar">
@@ -100,8 +101,14 @@
                     <!-- Create Post -->
                     <div class="create-post">
                         <div class="post-header">
-                            <img src="https://via.placeholder.com/50" alt="Tu mascota" class="profile-pic">
-                            <input type="text" placeholder="¿Qué está haciendo tu mascota hoy en Panamá? 🐕🇵🇦" class="post-input">
+                            <img src="https://via.placeholder.com/50" alt="Tu mascota" class="profile-pic"
+                                id="createPostAvatar">
+                            <textarea id="textPostInput"
+                                placeholder="¿Qué está haciendo tu mascota hoy en Panamá? 🐕�🇦" class="post-input"
+                                rows="1"></textarea>
+                            <button class="btn-publish" id="publishTextPostBtn" title="Publicar">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
                         </div>
                         <div class="post-actions">
                             <button class="post-btn" onclick="uploadPhoto()">
@@ -116,9 +123,6 @@
                             <button class="post-btn" onclick="createReel()">
                                 <i class="fas fa-play-circle"></i> Reel
                             </button>
-                            <button class="post-btn" onclick="addFilter()">
-                                <i class="fas fa-magic"></i> Filtros
-                            </button>
                         </div>
                     </div>
 
@@ -127,6 +131,22 @@
                         <!-- Posts will be dynamically loaded here -->
                     </div>
                 </div>
+
+                <!-- Recommendations Panel -->
+                <aside class="recommendations-panel">
+                    <div class="recommendations-header">
+                        <h3>Sugerencias para ti</h3>
+                        <span class="see-all">Ver todo</span>
+                    </div>
+                    <div class="recommendations-list" id="recommendationsList">
+                        <!-- Recommendations will be loaded here -->
+                    </div>
+
+                    <div class="panel-footer">
+                        <p>© 2025 PawNet - Red Social para Mascotas 🐾</p>
+                        <p style="font-size: 0.8rem; color: #999;">Hecho con ❤️ en Panamá</p>
+                    </div>
+                </aside>
             </div>
         </section>
 
@@ -212,7 +232,7 @@
                     <div class="profile-header" id="profileHeader">
                         <!-- Profile content will be loaded dynamically -->
                     </div>
-                    
+
                     <!-- User Posts -->
                     <div class="profile-posts">
                         <div class="posts-header">
@@ -246,11 +266,11 @@
                             <!-- Match info will be loaded here -->
                         </div>
                     </div>
-                    
+
                     <div class="chat-messages" id="chatMessages">
                         <!-- Messages will be loaded here -->
                     </div>
-                    
+
                     <div class="chat-input-container">
                         <div class="chat-actions">
                             <button class="chat-action-btn" id="requestMeetingBtn">
@@ -326,8 +346,10 @@
                 <div class="upload-preview" id="photoPreview" style="display: none;">
                     <img id="previewImage" src="" alt="Preview">
                     <div class="upload-form">
-                        <textarea id="photoCaption" placeholder="Escribe algo sobre esta foto... 🐾" rows="3"></textarea>
-                        <input type="text" id="photoLocation" placeholder="¿Dónde fue tomada? (ej: Parque Omar, Panamá)">
+                        <textarea id="photoCaption" placeholder="Escribe algo sobre esta foto... 🐾"
+                            rows="3"></textarea>
+                        <input type="text" id="photoLocation"
+                            placeholder="¿Dónde fue tomada? (ej: Parque Omar, Panamá)">
                         <div class="upload-actions">
                             <button type="button" class="btn-secondary" onclick="cancelPhotoUpload()">Cancelar</button>
                             <button type="button" class="btn-primary" onclick="publishPhoto()">Publicar Foto</button>
@@ -356,8 +378,10 @@
                 <div class="upload-preview" id="videoPreview" style="display: none;">
                     <video id="previewVideo" controls></video>
                     <div class="upload-form">
-                        <textarea id="videoCaption" placeholder="Describe este momento especial... 🎬" rows="3"></textarea>
-                        <input type="text" id="videoLocation" placeholder="¿Dónde fue grabado? (ej: Costa del Este, Panamá)">
+                        <textarea id="videoCaption" placeholder="Describe este momento especial... 🎬"
+                            rows="3"></textarea>
+                        <input type="text" id="videoLocation"
+                            placeholder="¿Dónde fue grabado? (ej: Costa del Este, Panamá)">
                         <div class="upload-actions">
                             <button type="button" class="btn-secondary" onclick="cancelVideoUpload()">Cancelar</button>
                             <button type="button" class="btn-primary" onclick="publishVideo()">Publicar Video</button>
@@ -368,10 +392,94 @@
         </div>
     </div>
 
+    <!-- Create Story Modal -->
+    <div id="createStoryModal" class="modal">
+        <div class="modal-content upload-modal">
+            <span class="close" id="closeStoryModal">&times;</span>
+            <h2>Crear Historia 📱</h2>
+            <p style="color: #666; text-align: center; margin-bottom: 1.5rem;">Las historias desaparecen después de 24
+                horas</p>
+            <div class="upload-container">
+                <div class="upload-area" id="storyUploadArea">
+                    <i class="fas fa-camera upload-icon"></i>
+                    <p>Sube una foto o video para tu historia</p>
+                    <input type="file" id="storyInput" accept="image/*,video/*" style="display: none;">
+                    <button type="button" class="btn-secondary" id="selectStoryBtn">
+                        Seleccionar Archivo
+                    </button>
+                </div>
+                <div class="upload-preview" id="storyPreview" style="display: none;">
+                    <div id="storyMediaPreview"></div>
+                    <div class="upload-form">
+                        <textarea id="storyText" placeholder="Agrega texto a tu historia... 🐾" rows="2"
+                            maxlength="150"></textarea>
+                        <input type="text" id="storyLocation" placeholder="¿Dónde estás? (ej: Casco Viejo, Panamá)">
+                        <div class="upload-actions">
+                            <button type="button" class="btn-secondary" id="cancelStoryBtn">Cancelar</button>
+                            <button type="button" class="btn-primary" id="publishStoryBtn">Publicar Historia</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Reel Modal -->
+    <div id="createReelModal" class="modal">
+        <div class="modal-content upload-modal">
+            <span class="close" id="closeReelModal">&times;</span>
+            <h2>Crear Reel 🎬</h2>
+            <p style="color: #666; text-align: center; margin-bottom: 1.5rem;">Crea videos cortos y divertidos de tu
+                mascota</p>
+            <div class="upload-container">
+                <div class="upload-area" id="reelUploadArea">
+                    <i class="fas fa-video upload-icon"></i>
+                    <p>Sube un video para tu reel</p>
+                    <p class="upload-hint">Máximo 60 segundos • MP4, MOV</p>
+                    <input type="file" id="reelInput" accept="video/*" style="display: none;">
+                    <button type="button" class="btn-secondary" id="selectReelBtn">
+                        Seleccionar Video
+                    </button>
+                </div>
+                <div class="upload-preview" id="reelPreview" style="display: none;">
+                    <video id="previewReel" controls></video>
+                    <div class="upload-form">
+                        <textarea id="reelDescription" placeholder="Describe tu reel... 🎥" rows="3"
+                            maxlength="200"></textarea>
+                        <input type="text" id="reelLocation"
+                            placeholder="¿Dónde fue grabado? (ej: Parque Metropolitano)">
+                        <div class="upload-actions">
+                            <button type="button" class="btn-secondary" id="cancelReelBtn">Cancelar</button>
+                            <button type="button" class="btn-primary" id="publishReelBtn">Publicar Reel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comments Modal -->
+    <div id="commentsModal" class="modal">
+        <div class="modal-content comments-modal">
+            <span class="close" id="closeCommentsModal">&times;</span>
+            <h2>Comentarios 💬</h2>
+            <div class="comments-container" id="commentsContainer">
+                <!-- Comments will be loaded here -->
+            </div>
+            <div class="comment-input-area">
+                <input type="text" id="commentInput" placeholder="Escribe un comentario...">
+                <button class="btn-primary" id="postCommentBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden file inputs for drag and drop -->
     <input type="file" id="hiddenPhotoInput" accept="image/*" style="display: none;">
     <input type="file" id="hiddenVideoInput" accept="video/*" style="display: none;">
 
     <script src="script.js"></script>
 </body>
+
 </html>

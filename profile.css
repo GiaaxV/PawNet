@@ -57,6 +57,23 @@
     font-weight: 500;
 }
 
+.stat-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.stat-item:hover {
+    background: #f8f9fa;
+    color: #ff6b6b;
+}
+
+.stat-item strong {
+    color: #333;
+    font-size: 1.1rem;
+}
+
 .profile-owner {
     margin-top: 1rem;
     padding-top: 1rem;

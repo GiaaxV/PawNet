@@ -48,8 +48,8 @@ const sampleStories = [
     {
         id: 2,
         user: "Toby",
-        userAvatar: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=70&h=70&fit=crop&crop=face",
-        background: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=200&h=300&fit=crop",
+        userAvatar: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=70&h=70&fit=crop&crop=face",
+        background: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=200&h=300&fit=crop",
         text: "Playa en Panamá 🏖️",
         timeAgo: "5h",
         location: "Costa del Este"
@@ -147,7 +147,7 @@ const sampleMatches = [
         breed: "Beagle",
         age: "4 años",
         location: "Tocumen",
-        image: "https://images.unsplash.com/photo-1544717297-fa95b6ee9643?w=300&h=200&fit=crop",
+        image: "https://images.unsplash.com/photo-1505628346881-b72b27e84530?w=300&h=200&fit=crop",
         personality: "Aventurero y sociable",
         district: "Panamá Este"
     },
@@ -303,6 +303,104 @@ function findUserByEmail(email) {
     return users.find(user => user.email === email);
 }
 
+// Post Management Functions
+function saveUserPost(post) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    // Get existing user posts
+    const userPosts = getUserPosts(currentUser.id);
+    
+    // Add new post
+    userPosts.unshift(post);
+    
+    // Save to localStorage
+    localStorage.setItem(`pawnet_posts_${currentUser.id}`, JSON.stringify(userPosts));
+    
+    console.log('💾 Post guardado para usuario:', currentUser.id);
+    console.log('📋 Total posts del usuario:', userPosts.length);
+}
+
+function getUserPosts(userId) {
+    const posts = localStorage.getItem(`pawnet_posts_${userId}`);
+    return posts ? JSON.parse(posts) : [];
+}
+
+function loadUserPostsFromStorage() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return [];
+    
+    const userPosts = getUserPosts(currentUser.id);
+    console.log('📂 Cargando posts del usuario desde localStorage:', userPosts.length);
+    
+    // Add user posts to samplePosts if not already there
+    userPosts.forEach(post => {
+        if (!samplePosts.find(p => p.id === post.id)) {
+            samplePosts.unshift(post);
+        }
+    });
+    
+    return userPosts;
+}
+
+// Story Management Functions
+function saveUserStory(story) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const userStories = getUserStories(currentUser.id);
+    userStories.unshift(story);
+    localStorage.setItem(`pawnet_stories_${currentUser.id}`, JSON.stringify(userStories));
+    console.log('💾 Historia guardada para usuario:', currentUser.id);
+}
+
+function getUserStories(userId) {
+    const stories = localStorage.getItem(`pawnet_stories_${userId}`);
+    return stories ? JSON.parse(stories) : [];
+}
+
+function loadUserStoriesFromStorage() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return [];
+    
+    const userStories = getUserStories(currentUser.id);
+    userStories.forEach(story => {
+        if (!sampleStories.find(s => s.id === story.id)) {
+            sampleStories.unshift(story);
+        }
+    });
+    return userStories;
+}
+
+// Reel Management Functions
+function saveUserReel(reel) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const userReels = getUserReels(currentUser.id);
+    userReels.unshift(reel);
+    localStorage.setItem(`pawnet_reels_${currentUser.id}`, JSON.stringify(userReels));
+    console.log('💾 Reel guardado para usuario:', currentUser.id);
+}
+
+function getUserReels(userId) {
+    const reels = localStorage.getItem(`pawnet_reels_${userId}`);
+    return reels ? JSON.parse(reels) : [];
+}
+
+function loadUserReelsFromStorage() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return [];
+    
+    const userReels = getUserReels(currentUser.id);
+    userReels.forEach(reel => {
+        if (!sampleReels.find(r => r.id === reel.id)) {
+            sampleReels.unshift(reel);
+        }
+    });
+    return userReels;
+}
+
 function registerUser(userData) {
     const users = getAllUsers();
 
@@ -428,6 +526,15 @@ document.addEventListener('DOMContentLoaded', function () {
         setupAuthForms();
         console.log('✅ Formularios de auth configurados');
 
+        // Load user content from storage
+        if (currentUser) {
+            loadUserPostsFromStorage();
+            loadUserStoriesFromStorage();
+            loadUserReelsFromStorage();
+            loadLikes();
+            console.log('✅ Contenido del usuario cargado desde localStorage');
+        }
+
         // Load content
         loadFeed();
         console.log('✅ Feed cargado');
@@ -452,6 +559,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         initializeUploadFeatures();
         console.log('✅ Funciones de upload inicializadas');
+
+        setupTextPost();
+        console.log('✅ Post de texto configurado');
 
         console.log('🎉 PawNet cargado completamente!');
         
@@ -644,6 +754,289 @@ function loadFeed() {
         const postElement = createPostElement(post);
         feedContainer.appendChild(postElement);
     });
+    
+    // Load recommendations
+    loadRecommendations();
+}
+
+// Recommendations Functions
+function loadRecommendations() {
+    const recommendationsList = document.getElementById('recommendationsList');
+    if (!recommendationsList) return;
+    
+    const currentUser = getCurrentUser();
+    const allUsers = getAllUsers();
+    
+    // Filter out current user and get random users
+    let recommendations = allUsers.filter(user => {
+        if (!currentUser) return true;
+        return user.id !== currentUser.id;
+    });
+    
+    // If no registered users, create sample recommendations
+    if (recommendations.length === 0) {
+        recommendations = createSampleRecommendations();
+    }
+    
+    // Shuffle and take first 5
+    recommendations = shuffleArray(recommendations).slice(0, 5);
+    
+    recommendationsList.innerHTML = '';
+    recommendations.forEach(user => {
+        const recElement = createRecommendationElement(user);
+        recommendationsList.appendChild(recElement);
+    });
+}
+
+function createSampleRecommendations() {
+    return [
+        {
+            id: 'sample1',
+            petName: 'Max',
+            petBreed: 'Golden Retriever',
+            location: 'Ciudad de Panamá',
+            petAvatar: 'https://via.placeholder.com/50/FFB6C1/000000?text=Max',
+            firstName: 'María'
+        },
+        {
+            id: 'sample2',
+            petName: 'Luna',
+            petBreed: 'Husky Siberiano',
+            location: 'Costa del Este',
+            petAvatar: 'https://via.placeholder.com/50/87CEEB/000000?text=Luna',
+            firstName: 'Carlos'
+        },
+        {
+            id: 'sample3',
+            petName: 'Rocky',
+            petBreed: 'Bulldog Francés',
+            location: 'Casco Viejo',
+            petAvatar: 'https://via.placeholder.com/50/98FB98/000000?text=Rocky',
+            firstName: 'Ana'
+        },
+        {
+            id: 'sample4',
+            petName: 'Bella',
+            petBreed: 'Labrador',
+            location: 'Albrook',
+            petAvatar: 'https://via.placeholder.com/50/DDA0DD/000000?text=Bella',
+            firstName: 'José'
+        },
+        {
+            id: 'sample5',
+            petName: 'Coco',
+            petBreed: 'Poodle',
+            location: 'Punta Pacífica',
+            petAvatar: 'https://via.placeholder.com/50/F0E68C/000000?text=Coco',
+            firstName: 'Laura'
+        }
+    ];
+}
+
+function createRecommendationElement(user) {
+    const div = document.createElement('div');
+    div.className = 'recommendation-item';
+    
+    const isFollowing = checkIfFollowing(user.id);
+    
+    div.innerHTML = `
+        <img src="${user.petAvatar || user.avatar || 'https://via.placeholder.com/50'}" 
+             alt="${user.petName || user.firstName}" 
+             class="recommendation-avatar">
+        <div class="recommendation-info">
+            <div class="recommendation-name">${user.petName || user.firstName}</div>
+            <div class="recommendation-details">${user.petBreed || 'Mascota'} • ${user.location || 'Panamá'}</div>
+        </div>
+        <button class="follow-btn ${isFollowing ? 'following' : ''}" data-user-id="${user.id}">
+            ${isFollowing ? 'Siguiendo' : 'Seguir'}
+        </button>
+    `;
+    
+    // Add follow button event
+    const followBtn = div.querySelector('.follow-btn');
+    followBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFollow(user.id, followBtn);
+    });
+    
+    // Add click to view profile
+    div.addEventListener('click', () => {
+        viewUserProfile(user);
+    });
+    
+    return div;
+}
+
+function shuffleArray(array) {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+}
+
+function toggleFollow(userId, button) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para seguir usuarios 🔒');
+        showLogin();
+        return;
+    }
+    
+    const following = getFollowing();
+    const index = following.indexOf(userId);
+    
+    if (index > -1) {
+        // Unfollow
+        following.splice(index, 1);
+        button.textContent = 'Seguir';
+        button.classList.remove('following');
+        showNotification('Dejaste de seguir a este usuario');
+    } else {
+        // Follow
+        following.push(userId);
+        button.textContent = 'Siguiendo';
+        button.classList.add('following');
+        showNotification('¡Ahora sigues a este usuario! 🎉');
+    }
+    
+    saveFollowing(following);
+    
+    // Update profile if active
+    const profileSection = document.getElementById('profile');
+    if (profileSection && profileSection.classList.contains('active')) {
+        loadUserProfile();
+    }
+}
+
+function getFollowing() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return [];
+    
+    const following = localStorage.getItem(`pawnet_following_${currentUser.id}`);
+    return following ? JSON.parse(following) : [];
+}
+
+function saveFollowing(following) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    localStorage.setItem(`pawnet_following_${currentUser.id}`, JSON.stringify(following));
+}
+
+function checkIfFollowing(userId) {
+    const following = getFollowing();
+    return following.includes(userId);
+}
+
+function getFollowers(userId) {
+    // Get all users and check who follows this user
+    const allUsers = getAllUsers();
+    let followers = [];
+    
+    allUsers.forEach(user => {
+        const userFollowing = localStorage.getItem(`pawnet_following_${user.id}`);
+        if (userFollowing) {
+            const followingList = JSON.parse(userFollowing);
+            if (followingList.includes(userId)) {
+                followers.push(user.id);
+            }
+        }
+    });
+    
+    return followers;
+}
+
+function getFollowingCount() {
+    return getFollowing().length;
+}
+
+function getFollowersCount(userId) {
+    return getFollowers(userId).length;
+}
+
+function showFollowers() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const followerIds = getFollowers(currentUser.id);
+    const allUsers = getAllUsers();
+    const followers = allUsers.filter(user => followerIds.includes(user.id));
+    
+    if (followers.length === 0) {
+        showNotification('Aún no tienes seguidores 😊');
+        return;
+    }
+    
+    showUserListModal('Seguidores', followers);
+}
+
+function showFollowing() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const followingIds = getFollowing();
+    const allUsers = getAllUsers();
+    const following = allUsers.filter(user => followingIds.includes(user.id));
+    
+    // Add sample users if following them
+    const sampleUsers = createSampleRecommendations();
+    sampleUsers.forEach(sample => {
+        if (followingIds.includes(sample.id)) {
+            following.push(sample);
+        }
+    });
+    
+    if (following.length === 0) {
+        showNotification('Aún no sigues a nadie 😊');
+        return;
+    }
+    
+    showUserListModal('Siguiendo', following);
+}
+
+function showUserListModal(title, users) {
+    // Create modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.style.display = 'block';
+    modal.id = 'userListModal';
+    
+    let usersHTML = users.map(user => `
+        <div class="recommendation-item" style="margin-bottom: 0.5rem;">
+            <img src="${user.petAvatar || user.avatar || 'https://via.placeholder.com/50'}" 
+                 alt="${user.petName || user.firstName}" 
+                 class="recommendation-avatar">
+            <div class="recommendation-info">
+                <div class="recommendation-name">${user.petName || user.firstName}</div>
+                <div class="recommendation-details">${user.petBreed || 'Mascota'} • ${user.location || 'Panamá'}</div>
+            </div>
+        </div>
+    `).join('');
+    
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close" onclick="closeUserListModal()">&times;</span>
+            <h2>${title}</h2>
+            <div style="max-height: 400px; overflow-y: auto; margin-top: 1rem;">
+                ${usersHTML}
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function closeUserListModal() {
+    const modal = document.getElementById('userListModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+function viewUserProfile(user) {
+    showNotification(`Ver perfil de ${user.petName || user.firstName} - Próximamente 👀`);
 }
 
 function createPostElement(post) {
@@ -652,10 +1045,13 @@ function createPostElement(post) {
     
     console.log('🖼️ Creando post para:', post.user, 'con imagen:', post.image ? 'SÍ' : 'NO');
 
-    // Determine if it's a video post
-    const mediaElement = post.isVideo ?
-        `<video src="${post.image}" class="post-image" controls></video>` :
-        `<img src="${post.image}" alt="Post image" class="post-image" onerror="console.error('Error cargando imagen:', this.src)">`;
+    // Determine media element (only if there's an image/video)
+    let mediaElement = '';
+    if (post.image) {
+        mediaElement = post.isVideo ?
+            `<video src="${post.image}" class="post-image" controls></video>` :
+            `<img src="${post.image}" alt="Post image" class="post-image" onerror="console.error('Error cargando imagen:', this.src)">`;
+    }
 
     postDiv.innerHTML = `
         <div class="post-card-header">
@@ -666,7 +1062,7 @@ function createPostElement(post) {
             </div>
         </div>
         <div class="post-card-content">
-            <p style="margin-bottom: 1rem;">${post.caption}</p>
+            <p style="margin-bottom: ${post.image ? '1rem' : '0'}; font-size: ${post.isTextOnly ? '1.1rem' : '1rem'}; line-height: 1.6;">${post.caption}</p>
             ${mediaElement}
         </div>
         <div class="post-actions-bar">
@@ -889,22 +1285,230 @@ function shareReel(reelId) {
 }
 
 function toggleLike(postId) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para dar like 🔒');
+        showLogin();
+        return;
+    }
+
     const post = samplePosts.find(p => p.id === postId);
     if (!post) return;
 
+    // Initialize likes if undefined
+    if (typeof post.likes !== 'number') {
+        post.likes = 0;
+    }
+
+    // Toggle like
     if (likedPosts.has(postId)) {
         likedPosts.delete(postId);
-        post.likes--;
+        post.likes = Math.max(0, post.likes - 1); // Never go below 0
     } else {
         likedPosts.add(postId);
         post.likes++;
+        showNotification('❤️ ¡Te gustó esta publicación!');
     }
 
-    loadFeed(); // Recargar el feed para actualizar los likes
+    // Save likes to localStorage
+    saveLikes();
+
+    // Update only the like button and count
+    updateLikeButton(postId, post.likes);
+}
+
+function updateLikeButton(postId, likes) {
+    // Find all like buttons for this post
+    const likeButtons = document.querySelectorAll(`[data-post-id="${postId}"]`);
+    likeButtons.forEach(btn => {
+        if (btn.classList.contains('like-btn')) {
+            const likeCount = btn.querySelector('.like-count');
+            if (likeCount) {
+                likeCount.textContent = likes;
+            }
+            
+            if (likedPosts.has(postId)) {
+                btn.classList.add('liked');
+            } else {
+                btn.classList.remove('liked');
+            }
+        }
+    });
+}
+
+function saveLikes() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const likesArray = Array.from(likedPosts);
+    localStorage.setItem(`pawnet_likes_${currentUser.id}`, JSON.stringify(likesArray));
+}
+
+function loadLikes() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) return;
+    
+    const likes = localStorage.getItem(`pawnet_likes_${currentUser.id}`);
+    if (likes) {
+        const likesArray = JSON.parse(likes);
+        likedPosts = new Set(likesArray);
+    }
 }
 
 function showComments(postId) {
-    alert('Función de comentarios en desarrollo 💬');
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para comentar 🔒');
+        showLogin();
+        return;
+    }
+
+    const post = samplePosts.find(p => p.id === postId);
+    if (!post) return;
+
+    // Store current post ID
+    window.currentCommentPostId = postId;
+
+    // Open modal
+    const modal = document.getElementById('commentsModal');
+    modal.style.display = 'block';
+
+    // Load comments
+    loadComments(postId);
+
+    // Setup comment input
+    setupCommentInput();
+}
+
+function setupCommentInput() {
+    const commentInput = document.getElementById('commentInput');
+    const postBtn = document.getElementById('postCommentBtn');
+    const closeBtn = document.getElementById('closeCommentsModal');
+
+    // Remove old listeners
+    postBtn.replaceWith(postBtn.cloneNode(true));
+    const newPostBtn = document.getElementById('postCommentBtn');
+
+    newPostBtn.addEventListener('click', postComment);
+
+    commentInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            postComment();
+        }
+    });
+
+    closeBtn.addEventListener('click', () => {
+        closeModal('commentsModal');
+        document.getElementById('commentInput').value = '';
+    });
+}
+
+function loadComments(postId) {
+    const commentsContainer = document.getElementById('commentsContainer');
+    const comments = getPostComments(postId);
+
+    if (comments.length === 0) {
+        commentsContainer.innerHTML = `
+            <div class="no-comments">
+                <i class="fas fa-comments"></i>
+                <p>No hay comentarios aún</p>
+                <p style="font-size: 0.9rem;">¡Sé el primero en comentar!</p>
+            </div>
+        `;
+        return;
+    }
+
+    commentsContainer.innerHTML = '';
+    comments.forEach(comment => {
+        const commentElement = createCommentElement(comment);
+        commentsContainer.appendChild(commentElement);
+    });
+
+    // Scroll to bottom
+    commentsContainer.scrollTop = commentsContainer.scrollHeight;
+}
+
+function createCommentElement(comment) {
+    const div = document.createElement('div');
+    div.className = 'comment-item';
+    div.innerHTML = `
+        <img src="${comment.userAvatar}" alt="${comment.userName}" class="comment-avatar">
+        <div class="comment-content">
+            <div class="comment-author">${comment.userName}</div>
+            <div class="comment-text">${comment.text}</div>
+            <div class="comment-time">${comment.timeAgo}</div>
+        </div>
+    `;
+    return div;
+}
+
+function postComment() {
+    const commentInput = document.getElementById('commentInput');
+    const text = commentInput.value.trim();
+
+    if (!text) {
+        showNotification('Escribe algo para comentar 💬');
+        return;
+    }
+
+    const currentUser = getCurrentUser();
+    const postId = window.currentCommentPostId;
+
+    const newComment = {
+        id: Date.now(),
+        postId: postId,
+        userName: currentUser.petName || currentUser.firstName,
+        userAvatar: currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/40',
+        text: text,
+        timeAgo: 'Ahora',
+        createdAt: new Date().toISOString()
+    };
+
+    // Save comment
+    saveComment(newComment);
+
+    // Update post comment count
+    const post = samplePosts.find(p => p.id === postId);
+    if (post) {
+        post.comments++;
+        updateCommentCount(postId, post.comments);
+    }
+
+    // Reload comments
+    loadComments(postId);
+
+    // Clear input
+    commentInput.value = '';
+
+    showNotification('💬 Comentario publicado');
+}
+
+function saveComment(comment) {
+    const comments = getAllComments();
+    comments.push(comment);
+    localStorage.setItem('pawnet_comments', JSON.stringify(comments));
+}
+
+function getAllComments() {
+    const comments = localStorage.getItem('pawnet_comments');
+    return comments ? JSON.parse(comments) : [];
+}
+
+function getPostComments(postId) {
+    const allComments = getAllComments();
+    return allComments.filter(c => c.postId === postId);
+}
+
+function updateCommentCount(postId, count) {
+    const commentButtons = document.querySelectorAll(`[data-post-id="${postId}"]`);
+    commentButtons.forEach(btn => {
+        if (btn.classList.contains('comment-btn')) {
+            const countText = btn.childNodes[2]; // The text node after the icon
+            if (countText) {
+                countText.textContent = ` ${count}`;
+            }
+        }
+    });
 }
 
 function sharePost(postId) {
@@ -1352,46 +1956,142 @@ function copyMessage(petName) {
 }
 
 function adoptPet(adoptionId) {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para adoptar 🔒');
+        showLogin();
+        return;
+    }
+
     const pet = sampleAdoptions.find(a => a.id === adoptionId);
-    if (pet) {
-        // Show adoption interest modal
-        const modal = document.createElement('div');
-        modal.className = 'adoption-interest-modal';
-        modal.innerHTML = `
-            <div class="adoption-interest-content">
-                <div class="interest-header">
-                    <h2>¡Interés en Adopción! 🏠</h2>
-                    <p>Gracias por tu interés en adoptar a <strong>${pet.name}</strong></p>
-                </div>
-                
-                <div class="adoption-steps">
-                    <h3>Próximos pasos:</h3>
-                    <ol>
-                        <li>Contacta a <strong>${pet.foundation}</strong></li>
-                        <li>Programa una visita para conocer a ${pet.name}</li>
-                        <li>Completa el proceso de adopción</li>
-                        <li>¡Dale un hogar lleno de amor! 💕</li>
-                    </ol>
-                </div>
-                
-                <div class="adoption-actions">
-                    <button class="btn-primary" onclick="contactFoundation(${adoptionId}); closeAdoptionInterest();">
-                        Contactar Fundación
-                    </button>
-                    <button class="btn-secondary" onclick="closeAdoptionInterest()">
-                        Cerrar
-                    </button>
-                </div>
+    if (!pet) return;
+
+    // Show adoption success animation
+    showAdoptionInterest(pet);
+
+    // Create adoption chat record
+    const adoptionRecord = {
+        id: Date.now(),
+        petId: adoptionId,
+        petName: pet.name,
+        foundation: pet.foundation,
+        userId: currentUser.id,
+        createdAt: new Date().toISOString(),
+        status: 'interested'
+    };
+
+    // Save adoption interest to localStorage
+    const adoptions = JSON.parse(localStorage.getItem('pawnet_adoptions') || '[]');
+    adoptions.push(adoptionRecord);
+    localStorage.setItem('pawnet_adoptions', JSON.stringify(adoptions));
+
+    // Redirect to chat after animation
+    setTimeout(() => {
+        hideAdoptionInterest();
+        openAdoptionChat(adoptionRecord, pet);
+    }, 2500);
+}
+
+function showAdoptionInterest(pet) {
+    const animation = document.createElement('div');
+    animation.className = 'adoption-success-animation';
+    animation.id = 'adoptionSuccessAnimation';
+    animation.innerHTML = `
+        <div class="adoption-success-content">
+            <h2>¡Excelente Decisión! 🏠</h2>
+            <p>Estás a punto de darle un hogar a ${pet.name}</p>
+            <div style="font-size: 3rem; margin: 1rem 0;">🐾❤️🏡</div>
+            <p style="font-size: 0.9rem; color: #666;">Conectando con ${pet.foundation}...</p>
+        </div>
+    `;
+    document.body.appendChild(animation);
+}
+
+function hideAdoptionInterest() {
+    const animation = document.getElementById('adoptionSuccessAnimation');
+    if (animation) {
+        animation.remove();
+    }
+}
+
+function openAdoptionChat(adoptionRecord, pet) {
+    // Switch to chat section
+    showSection('chat');
+
+    // Update navigation
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(l => l.classList.remove('active'));
+
+    // Load adoption chat interface
+    loadAdoptionChatInterface(adoptionRecord, pet);
+}
+
+function loadAdoptionChatInterface(adoptionRecord, pet) {
+    const matchInfo = document.getElementById('matchInfo');
+    const chatMessages = document.getElementById('chatMessages');
+
+    // Load foundation info
+    matchInfo.innerHTML = `
+        <img src="${pet.image}" alt="${pet.name}">
+        <div class="match-info-text">
+            <h3>${pet.name} - ${pet.foundation}</h3>
+            <p>${pet.breed} • ${pet.age} • ${pet.location}</p>
+        </div>
+    `;
+
+    // Load initial adoption message
+    const initialMessage = {
+        id: Date.now(),
+        text: `Hola, me interesa adoptar a ${pet.name}. ¿Podrían darme más información sobre el proceso de adopción? Gracias.`,
+        sender: 'user',
+        time: new Date().toLocaleTimeString('es-PA', { hour: '2-digit', minute: '2-digit' })
+    };
+
+    displayAdoptionMessages([initialMessage], adoptionRecord);
+
+    // Store current adoption for message sending
+    window.currentAdoption = adoptionRecord;
+    window.currentAdoptionPet = pet;
+    
+    // Setup chat event listeners
+    setupChatEventListeners();
+}
+
+function displayAdoptionMessages(messages, adoptionRecord) {
+    const chatMessages = document.getElementById('chatMessages');
+    const currentUser = getCurrentUser();
+
+    if (messages.length === 0) {
+        chatMessages.innerHTML = `
+            <div style="text-align: center; color: #666; padding: 2rem;">
+                <i class="fas fa-home" style="font-size: 2rem; margin-bottom: 1rem; color: #ddd;"></i>
+                <p>Inicia la conversación sobre la adopción 🐾</p>
             </div>
         `;
-        
-        document.body.appendChild(modal);
-        
-        // Auto close after 10 seconds
-        setTimeout(() => {
-            closeAdoptionInterest();
-        }, 10000);
+        return;
     }
+
+    chatMessages.innerHTML = '';
+    messages.forEach(message => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${message.sender === 'user' ? 'sent' : ''}`;
+        
+        const avatar = message.sender === 'user' 
+            ? (currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/40')
+            : 'https://via.placeholder.com/40/4caf50/ffffff?text=F';
+        
+        messageDiv.innerHTML = `
+            <img src="${avatar}" alt="Avatar" class="message-avatar">
+            <div class="message-content">
+                <p class="message-text">${message.text}</p>
+                <span class="message-time">${message.time}</span>
+            </div>
+        `;
+        chatMessages.appendChild(messageDiv);
+    });
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
 function closeAdoptionInterest() {
@@ -1402,6 +2102,83 @@ function closeAdoptionInterest() {
 }
 
 // Post Creation Functions
+function setupTextPost() {
+    const textInput = document.getElementById('textPostInput');
+    const publishBtn = document.getElementById('publishTextPostBtn');
+    
+    if (!textInput || !publishBtn) return;
+    
+    // Auto-resize textarea
+    textInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 150) + 'px';
+    });
+    
+    // Publish on button click
+    publishBtn.addEventListener('click', publishTextPost);
+    
+    // Publish on Enter (Shift+Enter for new line)
+    textInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            publishTextPost();
+        }
+    });
+}
+
+function publishTextPost() {
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para publicar 🔒');
+        showLogin();
+        return;
+    }
+    
+    const textInput = document.getElementById('textPostInput');
+    const text = textInput.value.trim();
+    
+    if (!text) {
+        showNotification('Escribe algo para publicar 📝');
+        return;
+    }
+    
+    // Create new text post
+    const newPost = {
+        id: Date.now(),
+        user: currentUser.petName || currentUser.firstName,
+        userAvatar: currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/50',
+        image: null, // No image for text posts
+        caption: text,
+        likes: 0,
+        comments: 0,
+        timeAgo: 'Ahora',
+        location: currentUser.location || 'Panamá',
+        isTextOnly: true
+    };
+    
+    // Add to posts array
+    samplePosts.unshift(newPost);
+    
+    // Save to localStorage
+    saveUserPost(newPost);
+    
+    // Reload feed
+    loadFeed();
+    
+    // Clear input
+    textInput.value = '';
+    textInput.style.height = 'auto';
+    
+    // Show success notification
+    showNotification('¡Publicación creada! 🎉');
+    
+    // Update profile if active
+    const profileSection = document.getElementById('profile');
+    if (profileSection && profileSection.classList.contains('active')) {
+        loadUserProfile();
+    }
+}
+
 function uploadPhoto() {
     const currentUser = getCurrentUser();
     if (!currentUser) {
@@ -1540,7 +2317,7 @@ function publishPhoto() {
     setTimeout(() => {
         // Create new post
         const newPost = {
-            id: samplePosts.length + 1,
+            id: Date.now(),
             user: currentUser.petName || currentUser.firstName,
             userAvatar: currentUser.petAvatar || currentUser.avatar || "https://via.placeholder.com/50",
             image: window.currentPhotoFile.data,
@@ -1555,6 +2332,9 @@ function publishPhoto() {
         samplePosts.unshift(newPost);
         console.log('✅ Nueva foto agregada:', newPost);
         console.log('📋 Total posts:', samplePosts.length);
+
+        // Save to localStorage
+        saveUserPost(newPost);
 
         // Reload feed
         loadFeed();
@@ -1695,7 +2475,7 @@ function publishVideo() {
     setTimeout(() => {
         // Create new post with video
         const newPost = {
-            id: samplePosts.length + 1,
+            id: Date.now(),
             user: currentUser.petName || currentUser.firstName,
             userAvatar: currentUser.petAvatar || currentUser.avatar || "https://via.placeholder.com/50",
             image: window.currentVideoFile.data,
@@ -1709,6 +2489,9 @@ function publishVideo() {
 
         // Add to beginning of posts array
         samplePosts.unshift(newPost);
+
+        // Save to localStorage
+        saveUserPost(newPost);
 
         // Reload feed
         loadFeed();
@@ -1734,11 +2517,234 @@ function publishVideo() {
 }
 
 function createStory() {
-    alert('¡Crear historia! 📱 Comparte momentos especiales de tu mascota en Panamá que desaparecen en 24 horas');
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para crear historias 🔒');
+        showLogin();
+        return;
+    }
+    
+    const modal = document.getElementById('createStoryModal');
+    modal.style.display = 'block';
+    setupStoryModal();
+}
+
+function setupStoryModal() {
+    const storyInput = document.getElementById('storyInput');
+    const selectBtn = document.getElementById('selectStoryBtn');
+    const closeBtn = document.getElementById('closeStoryModal');
+    const cancelBtn = document.getElementById('cancelStoryBtn');
+    const publishBtn = document.getElementById('publishStoryBtn');
+    
+    // Remove old listeners
+    selectBtn.replaceWith(selectBtn.cloneNode(true));
+    const newSelectBtn = document.getElementById('selectStoryBtn');
+    
+    newSelectBtn.addEventListener('click', () => {
+        storyInput.click();
+    });
+    
+    storyInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            previewStory(file);
+        }
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        closeModal('createStoryModal');
+        resetStoryModal();
+    });
+    
+    cancelBtn.addEventListener('click', () => {
+        closeModal('createStoryModal');
+        resetStoryModal();
+    });
+    
+    publishBtn.addEventListener('click', publishStory);
+}
+
+function previewStory(file) {
+    const uploadArea = document.getElementById('storyUploadArea');
+    const previewArea = document.getElementById('storyPreview');
+    const mediaPreview = document.getElementById('storyMediaPreview');
+    
+    uploadArea.style.display = 'none';
+    previewArea.style.display = 'block';
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        if (file.type.startsWith('image/')) {
+            mediaPreview.innerHTML = `<img src="${e.target.result}" alt="Story preview" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px;">`;
+        } else if (file.type.startsWith('video/')) {
+            mediaPreview.innerHTML = `<video src="${e.target.result}" controls style="width: 100%; max-height: 400px; border-radius: 10px;"></video>`;
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+function publishStory() {
+    const currentUser = getCurrentUser();
+    const storyText = document.getElementById('storyText').value;
+    const storyLocation = document.getElementById('storyLocation').value;
+    const storyInput = document.getElementById('storyInput');
+    
+    if (!storyInput.files[0]) {
+        showNotification('Por favor selecciona una imagen o video 📸');
+        return;
+    }
+    
+    // Create story object
+    const newStory = {
+        id: Date.now(),
+        user: currentUser.petName || currentUser.firstName,
+        userAvatar: currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/50',
+        background: URL.createObjectURL(storyInput.files[0]),
+        text: storyText || '¡Mira mi historia! 🐾',
+        location: storyLocation || 'Panamá',
+        timeAgo: 'Ahora',
+        isVideo: storyInput.files[0].type.startsWith('video/')
+    };
+    
+    // Add to stories array
+    sampleStories.unshift(newStory);
+    
+    // Save to localStorage
+    saveUserStory(newStory);
+    
+    // Reload stories
+    loadStories();
+    
+    // Close modal and reset
+    closeModal('createStoryModal');
+    resetStoryModal();
+    
+    showNotification('¡Historia publicada! 📱 Desaparecerá en 24 horas');
+}
+
+function resetStoryModal() {
+    document.getElementById('storyUploadArea').style.display = 'block';
+    document.getElementById('storyPreview').style.display = 'none';
+    document.getElementById('storyInput').value = '';
+    document.getElementById('storyText').value = '';
+    document.getElementById('storyLocation').value = '';
+    document.getElementById('storyMediaPreview').innerHTML = '';
 }
 
 function createReel() {
-    alert('¡Crear Reel! 🎬 Graba videos cortos y divertidos de tu mascota con música. ¡Perfecto para mostrar trucos y momentos graciosos!');
+    const currentUser = getCurrentUser();
+    if (!currentUser) {
+        showNotification('Debes iniciar sesión para crear reels 🔒');
+        showLogin();
+        return;
+    }
+    
+    const modal = document.getElementById('createReelModal');
+    modal.style.display = 'block';
+    setupReelModal();
+}
+
+function setupReelModal() {
+    const reelInput = document.getElementById('reelInput');
+    const selectBtn = document.getElementById('selectReelBtn');
+    const closeBtn = document.getElementById('closeReelModal');
+    const cancelBtn = document.getElementById('cancelReelBtn');
+    const publishBtn = document.getElementById('publishReelBtn');
+    
+    // Remove old listeners
+    selectBtn.replaceWith(selectBtn.cloneNode(true));
+    const newSelectBtn = document.getElementById('selectReelBtn');
+    
+    newSelectBtn.addEventListener('click', () => {
+        reelInput.click();
+    });
+    
+    reelInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            if (file.type.startsWith('video/')) {
+                previewReel(file);
+            } else {
+                showNotification('Por favor selecciona un archivo de video 🎥');
+            }
+        }
+    });
+    
+    closeBtn.addEventListener('click', () => {
+        closeModal('createReelModal');
+        resetReelModal();
+    });
+    
+    cancelBtn.addEventListener('click', () => {
+        closeModal('createReelModal');
+        resetReelModal();
+    });
+    
+    publishBtn.addEventListener('click', publishReel);
+}
+
+function previewReel(file) {
+    const uploadArea = document.getElementById('reelUploadArea');
+    const previewArea = document.getElementById('reelPreview');
+    const videoPreview = document.getElementById('previewReel');
+    
+    uploadArea.style.display = 'none';
+    previewArea.style.display = 'block';
+    
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        videoPreview.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+}
+
+function publishReel() {
+    const currentUser = getCurrentUser();
+    const reelDescription = document.getElementById('reelDescription').value;
+    const reelLocation = document.getElementById('reelLocation').value;
+    const reelInput = document.getElementById('reelInput');
+    
+    if (!reelInput.files[0]) {
+        showNotification('Por favor selecciona un video 🎥');
+        return;
+    }
+    
+    // Create reel object
+    const newReel = {
+        id: Date.now(),
+        user: currentUser.petName || currentUser.firstName,
+        userAvatar: currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/50',
+        video: URL.createObjectURL(reelInput.files[0]),
+        description: reelDescription || '¡Mira mi reel! 🎬',
+        location: reelLocation || 'Panamá',
+        likes: 0,
+        comments: 0,
+        shares: 0
+    };
+    
+    // Add to reels array
+    sampleReels.unshift(newReel);
+    
+    // Save to localStorage
+    saveUserReel(newReel);
+    
+    // Reload reels
+    loadReels();
+    
+    // Close modal and reset
+    closeModal('createReelModal');
+    resetReelModal();
+    
+    showNotification('¡Reel publicado! 🎬 Ahora todos pueden verlo');
+}
+
+function resetReelModal() {
+    document.getElementById('reelUploadArea').style.display = 'block';
+    document.getElementById('reelPreview').style.display = 'none';
+    document.getElementById('reelInput').value = '';
+    document.getElementById('reelDescription').value = '';
+    document.getElementById('reelLocation').value = '';
+    document.getElementById('previewReel').src = '';
 }
 
 function addFilter() {
@@ -2094,6 +3100,11 @@ function loadUserProfile() {
         return;
     }
 
+    // Get real counts
+    const followersCount = getFollowersCount(currentUser.id);
+    const followingCount = getFollowingCount();
+    const postsCount = getUserPosts(currentUser.id).length;
+
     profileHeader.innerHTML = `
         <img src="${currentUser.petAvatar || currentUser.avatar || 'https://via.placeholder.com/150'}" 
              alt="Mascota" class="profile-avatar">
@@ -2102,9 +3113,15 @@ function loadUserProfile() {
             <p class="breed">${currentUser.petBreed || 'Raza no especificada'} • ${currentUser.petAge || '?'} años</p>
             <p class="bio">${currentUser.petPersonality || currentUser.bio || 'Sin descripción'}</p>
             <div class="profile-stats">
-                <span>0 Seguidores</span>
-                <span>0 Siguiendo</span>
-                <span id="userPostCount">0 Posts</span>
+                <span class="stat-item" onclick="showFollowers()">
+                    <strong>${followersCount}</strong> Seguidores
+                </span>
+                <span class="stat-item" onclick="showFollowing()">
+                    <strong>${followingCount}</strong> Siguiendo
+                </span>
+                <span class="stat-item" id="userPostCount">
+                    <strong>${postsCount}</strong> Posts
+                </span>
             </div>
             <div class="profile-owner">
                 <p><strong>Dueño:</strong> ${currentUser.firstName || 'Usuario'} ${currentUser.lastName || ''}</p>
@@ -2138,7 +3155,7 @@ function loadUserPosts() {
 
     const userPostCountElement = document.getElementById('userPostCount');
     if (userPostCountElement) {
-        userPostCountElement.textContent = `${userPosts.length} Posts`;
+        userPostCountElement.innerHTML = `<strong>${userPosts.length}</strong> Posts`;
     }
 
     if (userPosts.length === 0) {
